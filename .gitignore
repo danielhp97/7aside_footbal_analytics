@@ -1,0 +1,19 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.venv/
+dist/
+*.egg-info/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# UV
+uv.lock
+
+# Data — raw exports may contain personal data, keep out of git by default
+data/raw/
+
+# OS
+.DS_Store
