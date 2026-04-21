@@ -3,12 +3,14 @@
 import csv
 import json
 import re
+import shutil
+import tempfile
 from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any
 
-from fastapi import FastAPI, Request
-from fastapi.responses import HTMLResponse
+from fastapi import FastAPI, File, Form, HTTPException, Request, UploadFile
+from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.templating import Jinja2Templates
 
 _ROOT = Path(__file__).parent.parent.parent
@@ -93,6 +95,12 @@ def load_processed_games() -> list[dict[str, Any]]:
     if not path.exists():
         return []
     return json.loads(path.read_text(encoding="utf-8"))
+
+
+def save_processed_games(games: list[dict[str, Any]]) -> None:
+    path = _ROOT / "data" / "processed" / "games.json"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(games, indent=2, ensure_ascii=False), encoding="utf-8")
 
 
 def build_player_stats(games: list[dict[str, Any]]) -> list[dict[str, Any]]:
@@ -193,3 +201,135 @@ async def dashboard(request: Request) -> HTMLResponse:
             "leaderboard_json": json.dumps(leaderboard),
         },
     )
+
+
+@app.post("/games")
+async def add_game(
+    date_str: str = Form(default="", alias="date"),
+    text: str = Form(default=""),
+    brancos_score: str = Form(default=""),
+    pretos_score: str = Form(default=""),
+    image: UploadFile | None = File(default=None),
+) -> JSONResponse:
+    from football_analytics.parsers.messenger import _extract_teams, _ocr_image  # noqa: PLC2701
+
+    # Parse date (default to today)
+    if date_str:
+        try:
+            game_date = date.fromisoformat(date_str)
+        except ValueError:
+            raise HTTPException(400, "Invalid date format, expected YYYY-MM-DD")
+    else:
+        game_date = date.today()
+
+    # Parse optional scores
+    b_score = int(brancos_score) if brancos_score.strip().isdigit() else None
+    p_score = int(pretos_score) if pretos_score.strip().isdigit() else None
+
+    # Extract teams from image or text
+    teams = None
+    if image and image.filename:
+        suffix = Path(image.filename).suffix or ".jpg"
+        with tempfile.NamedTemporaryFile(suffix=suffix, delete=False) as tmp:
+            shutil.copyfileobj(image.file, tmp)
+            tmp_path = tmp.name
+        try:
+            ocr_text = _ocr_image(tmp_path)
+            if ocr_text:
+                teams = _extract_teams(ocr_text)
+        finally:
+            Path(tmp_path).unlink(missing_ok=True)
+
+    if teams is None and text.strip():
+        teams = _extract_teams(text)
+
+    if teams is None:
+        raise HTTPException(400, "Could not parse team lineups — check the format (e.g. 'Brancos: Alice, Bob')")
+
+    brancos_team, pretos_team = teams
+
+    game_entry: dict[str, Any] = {
+        "date": game_date.isoformat(),
+        "brancos": {
+            "players": [p.name for p in brancos_team.players],
+            "score": b_score if b_score is not None else 0,
+        },
+        "pretos": {
+            "players": [p.name for p in pretos_team.players],
+            "score": p_score if p_score is not None else 0,
+        },
+    }
+
+    # Upsert into games.json
+    games = load_processed_games()
+    idx = next((i for i, g in enumerate(games) if g["date"] == game_date.isoformat()), None)
+    if idx is not None:
+        existing = games[idx]
+        # Preserve existing scores when none supplied
+        if b_score is None:
+            game_entry["brancos"]["score"] = existing.get("brancos", {}).get("score", 0)
+        if p_score is None:
+            game_entry["pretos"]["score"] = existing.get("pretos", {}).get("score", 0)
+        games[idx] = game_entry
+        action = "updated"
+    else:
+        games.append(game_entry)
+        games.sort(key=lambda g: g["date"])
+        action = "created"
+
+    save_processed_games(games)
+    return JSONResponse({
+        "status": "ok",
+        "action": action,
+        "date": game_date.isoformat(),
+        "brancos": game_entry["brancos"]["players"],
+        "pretos": game_entry["pretos"]["players"],
+    })
+
+
+_PADRE_ALIASES = {"padre", "padreco"}
+
+
+@app.post("/games/sync-garmin")
+async def sync_garmin_scores() -> JSONResponse:
+    from football_analytics.garmin_client import fetch_games as garmin_fetch
+
+    games = load_processed_games()
+    if not games:
+        return JSONResponse({"status": "ok", "updated": 0, "total": 0})
+
+    dates = [date.fromisoformat(g["date"]) for g in games]
+    try:
+        garmin_games = garmin_fetch(min(dates), max(dates))
+    except Exception as exc:
+        raise HTTPException(500, f"Garmin error: {exc}")
+
+    score_by_date = {g.date: (g.team_a.score, g.team_b.score) for g in garmin_games}
+
+    updated = 0
+    for game in games:
+        game_date = date.fromisoformat(game["date"])
+        scores = score_by_date.get(game_date) or score_by_date.get(game_date + timedelta(days=1))
+        if scores is None:
+            continue
+        score_my, score_opp = scores
+
+        padre_side = next(
+            (side for side in ("brancos", "pretos")
+             if any(p.lower() in _PADRE_ALIASES for p in game.get(side, {}).get("players", []))),
+            None,
+        )
+
+        if padre_side == "brancos":
+            game["brancos"]["score"] = score_my
+            game["pretos"]["score"] = score_opp
+        elif padre_side == "pretos":
+            game["pretos"]["score"] = score_my
+            game["brancos"]["score"] = score_opp
+        else:
+            game["brancos"]["score"] = score_my
+            game["pretos"]["score"] = score_opp
+        updated += 1
+
+    save_processed_games(games)
+    return JSONResponse({"status": "ok", "updated": updated, "total": len(games)})
