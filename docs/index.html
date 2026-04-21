@@ -1,0 +1,2256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Football Analytics</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+</head>
+<body class="bg-gray-50 min-h-screen font-sans">
+
+  <!-- Header -->
+  <header class="bg-emerald-700 text-white shadow-lg">
+    <div class="max-w-7xl mx-auto px-6 py-5 flex items-center gap-4">
+      <span class="text-3xl">⚽</span>
+      <div>
+        <h1 class="text-2xl font-bold tracking-tight">Football Analytics</h1>
+        <p class="text-emerald-200 text-sm">Monday night Guimarães · Brancos vs Pretos</p>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto px-6 py-8 space-y-8">
+
+    <!-- Stats Cards -->
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
+      <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 flex items-center gap-4">
+        <div class="bg-emerald-100 rounded-full p-3 text-2xl">🏟️</div>
+        <div>
+          <p class="text-3xl font-bold text-gray-900">12</p>
+          <p class="text-sm text-gray-500">Games played</p>
+        </div>
+      </div>
+      <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 flex items-center gap-4">
+        <div class="bg-blue-100 rounded-full p-3 text-2xl">👥</div>
+        <div>
+          <p class="text-3xl font-bold text-gray-900">19</p>
+          <p class="text-sm text-gray-500">Tracked players</p>
+        </div>
+      </div>
+      <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 flex items-center gap-4">
+        <div class="bg-amber-100 rounded-full p-3 text-2xl">📅</div>
+        <div>
+          <p class="text-xl font-bold text-gray-900">2026-04-20</p>
+          <p class="text-sm text-gray-500">Latest game</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tabs -->
+    <div>
+      <div class="flex gap-1 border-b border-gray-200 mb-6" id="tabs">
+        <button class="tab-btn px-4 py-2 text-sm font-medium rounded-t-lg border-b-2 border-emerald-500 text-emerald-600 transition-colors" onclick="showTab('leaderboard', this)">Leaderboard</button>
+        <button class="tab-btn px-4 py-2 text-sm font-medium rounded-t-lg border-b-2 border-transparent text-gray-500 hover:text-gray-700 transition-colors" onclick="showTab('games', this)">Game History</button>
+        <button class="tab-btn px-4 py-2 text-sm font-medium rounded-t-lg border-b-2 border-transparent text-gray-500 hover:text-gray-700 transition-colors" onclick="showTab('charts', this)">Charts</button>
+        <button class="tab-btn px-4 py-2 text-sm font-medium rounded-t-lg border-b-2 border-transparent text-gray-500 hover:text-gray-700 transition-colors" onclick="showTab('teams', this)">Teams</button>
+      </div>
+
+      <!-- Tab: Leaderboard -->
+      <div id="tab-leaderboard" class="tab-pane">
+        
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+          <div class="overflow-x-auto">
+            <table class="w-full text-sm">
+              <thead class="bg-gray-50 text-gray-500 uppercase text-xs tracking-wider">
+                <tr>
+                  <th class="px-4 py-3 text-left w-8">#</th>
+                  <th class="px-4 py-3 text-left">Player</th>
+                  <th class="px-4 py-3 text-center">Played</th>
+                  <th class="px-4 py-3 text-center text-emerald-600">W</th>
+                  <th class="px-4 py-3 text-center text-amber-500">D</th>
+                  <th class="px-4 py-3 text-center text-red-500">L</th>
+                  <th class="px-4 py-3 text-left">Win %</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-gray-50">
+                
+                <tr class="hover:bg-gray-50 transition-colors">
+                  <td class="px-4 py-3 text-gray-400 font-medium text-xs">
+                    🥇
+                    
+                  </td>
+                  <td class="px-4 py-3 font-semibold text-gray-900">Komossos</td>
+                  <td class="px-4 py-3 text-center text-gray-600">3</td>
+                  <td class="px-4 py-3 text-center font-bold text-emerald-600">3</td>
+                  <td class="px-4 py-3 text-center font-medium text-amber-500">0</td>
+                  <td class="px-4 py-3 text-center text-red-400">0</td>
+                  <td class="px-4 py-3">
+                    <div class="flex items-center gap-2">
+                      <div class="flex-1 bg-gray-100 rounded-full h-2 min-w-16">
+                        <div class="h-2 rounded-full bg-emerald-500"
+                             style="width: 100%"></div>
+                      </div>
+                      <span class="text-xs font-semibold text-gray-600 w-8 text-right">100%</span>
+                    </div>
+                  </td>
+                </tr>
+                
+                <tr class="hover:bg-gray-50 transition-colors">
+                  <td class="px-4 py-3 text-gray-400 font-medium text-xs">
+                    🥈
+                    
+                  </td>
+                  <td class="px-4 py-3 font-semibold text-gray-900">Bocesso</td>
+                  <td class="px-4 py-3 text-center text-gray-600">7</td>
+                  <td class="px-4 py-3 text-center font-bold text-emerald-600">6</td>
+                  <td class="px-4 py-3 text-center font-medium text-amber-500">1</td>
+                  <td class="px-4 py-3 text-center text-red-400">0</td>
+                  <td class="px-4 py-3">
+                    <div class="flex items-center gap-2">
+                      <div class="flex-1 bg-gray-100 rounded-full h-2 min-w-16">
+                        <div class="h-2 rounded-full bg-emerald-500"
+                             style="width: 86%"></div>
+                      </div>
+                      <span class="text-xs font-semibold text-gray-600 w-8 text-right">86%</span>
+                    </div>
+                  </td>
+                </tr>
+                
+                <tr class="hover:bg-gray-50 transition-colors">
+                  <td class="px-4 py-3 text-gray-400 font-medium text-xs">
+                    🥉
+                    
+                  </td>
+                  <td class="px-4 py-3 font-semibold text-gray-900">Salto</td>
+                  <td class="px-4 py-3 text-center text-gray-600">6</td>
+                  <td class="px-4 py-3 text-center font-bold text-emerald-600">4</td>
+                  <td class="px-4 py-3 text-center font-medium text-amber-500">2</td>
+                  <td class="px-4 py-3 text-center text-red-400">0</td>
+                  <td class="px-4 py-3">
+                    <div class="flex items-center gap-2">
+                      <div class="flex-1 bg-gray-100 rounded-full h-2 min-w-16">
+                        <div class="h-2 rounded-full bg-emerald-500"
+                             style="width: 67%"></div>
+                      </div>
+                      <span class="text-xs font-semibold text-gray-600 w-8 text-right">67%</span>
+                    </div>
+                  </td>
+                </tr>
+                
+                <tr class="hover:bg-gray-50 transition-colors">
+                  <td class="px-4 py-3 text-gray-400 font-medium text-xs">
+                    4
+                  </td>
+                  <td class="px-4 py-3 font-semibold text-gray-900">Ritalina</td>
+                  <td class="px-4 py-3 text-center text-gray-600">5</td>
+                  <td class="px-4 py-3 text-center font-bold text-emerald-600">3</td>
+                  <td class="px-4 py-3 text-center font-medium text-amber-500">1</td>
+                  <td class="px-4 py-3 text-center text-red-400">1</td>
+                  <td class="px-4 py-3">
+                    <div class="flex items-center gap-2">
+                      <div class="flex-1 bg-gray-100 rounded-full h-2 min-w-16">
+                        <div class="h-2 rounded-full bg-emerald-500"
+                             style="width: 60%"></div>
+                      </div>
+                      <span class="text-xs font-semibold text-gray-600 w-8 text-right">60%</span>
+                    </div>
+                  </td>
+                </tr>
+                
+                <tr class="hover:bg-gray-50 transition-colors">
+                  <td class="px-4 py-3 text-gray-400 font-medium text-xs">
+                    5
+                  </td>
+                  <td class="px-4 py-3 font-semibold text-gray-900">Lusco</td>
+                  <td class="px-4 py-3 text-center text-gray-600">5</td>
+                  <td class="px-4 py-3 text-center font-bold text-emerald-600">3</td>
+                  <td class="px-4 py-3 text-center font-medium text-amber-500">1</td>
+                  <td class="px-4 py-3 text-center text-red-400">1</td>
+                  <td class="px-4 py-3">
+                    <div class="flex items-center gap-2">
+                      <div class="flex-1 bg-gray-100 rounded-full h-2 min-w-16">
+                        <div class="h-2 rounded-full bg-emerald-500"
+                             style="width: 60%"></div>
+                      </div>
+                      <span class="text-xs font-semibold text-gray-600 w-8 text-right">60%</span>
+                    </div>
+                  </td>
+                </tr>
+                
+                <tr class="hover:bg-gray-50 transition-colors">
+                  <td class="px-4 py-3 text-gray-400 font-medium text-xs">
+                    6
+                  </td>
+                  <td class="px-4 py-3 font-semibold text-gray-900">Shiuvaca</td>
+                  <td class="px-4 py-3 text-center text-gray-600">12</td>
+                  <td class="px-4 py-3 text-center font-bold text-emerald-600">6</td>
+                  <td class="px-4 py-3 text-center font-medium text-amber-500">3</td>
+                  <td class="px-4 py-3 text-center text-red-400">3</td>
+                  <td class="px-4 py-3">
+                    <div class="flex items-center gap-2">
+                      <div class="flex-1 bg-gray-100 rounded-full h-2 min-w-16">
+                        <div class="h-2 rounded-full bg-amber-400"
+                             style="width: 50%"></div>
+                      </div>
+                      <span class="text-xs font-semibold text-gray-600 w-8 text-right">50%</span>
+                    </div>
+                  </td>
+                </tr>
+                
+                <tr class="hover:bg-gray-50 transition-colors">
+                  <td class="px-4 py-3 text-gray-400 font-medium text-xs">
+                    7
+                  </td>
+                  <td class="px-4 py-3 font-semibold text-gray-900">Pés de Sapo</td>
+                  <td class="px-4 py-3 text-center text-gray-600">4</td>
+                  <td class="px-4 py-3 text-center font-bold text-emerald-600">2</td>
+                  <td class="px-4 py-3 text-center font-medium text-amber-500">1</td>
+                  <td class="px-4 py-3 text-center text-red-400">1</td>
+                  <td class="px-4 py-3">
+                    <div class="flex items-center gap-2">
+                      <div class="flex-1 bg-gray-100 rounded-full h-2 min-w-16">
+                        <div class="h-2 rounded-full bg-amber-400"
+                             style="width: 50%"></div>
+                      </div>
+                      <span class="text-xs font-semibold text-gray-600 w-8 text-right">50%</span>
+                    </div>
+                  </td>
+                </tr>
+                
+                <tr class="hover:bg-gray-50 transition-colors">
+                  <td class="px-4 py-3 text-gray-400 font-medium text-xs">
+                    8
+                  </td>
+                  <td class="px-4 py-3 font-semibold text-gray-900">Tronco</td>
+                  <td class="px-4 py-3 text-center text-gray-600">9</td>
+                  <td class="px-4 py-3 text-center font-bold text-emerald-600">4</td>
+                  <td class="px-4 py-3 text-center font-medium text-amber-500">2</td>
+                  <td class="px-4 py-3 text-center text-red-400">3</td>
+                  <td class="px-4 py-3">
+                    <div class="flex items-center gap-2">
+                      <div class="flex-1 bg-gray-100 rounded-full h-2 min-w-16">
+                        <div class="h-2 rounded-full bg-amber-400"
+                             style="width: 44%"></div>
+                      </div>
+                      <span class="text-xs font-semibold text-gray-600 w-8 text-right">44%</span>
+                    </div>
+                  </td>
+                </tr>
+                
+                <tr class="hover:bg-gray-50 transition-colors">
+                  <td class="px-4 py-3 text-gray-400 font-medium text-xs">
+                    9
+                  </td>
+                  <td class="px-4 py-3 font-semibold text-gray-900">Chupa</td>
+                  <td class="px-4 py-3 text-center text-gray-600">10</td>
+                  <td class="px-4 py-3 text-center font-bold text-emerald-600">4</td>
+                  <td class="px-4 py-3 text-center font-medium text-amber-500">3</td>
+                  <td class="px-4 py-3 text-center text-red-400">3</td>
+                  <td class="px-4 py-3">
+                    <div class="flex items-center gap-2">
+                      <div class="flex-1 bg-gray-100 rounded-full h-2 min-w-16">
+                        <div class="h-2 rounded-full bg-amber-400"
+                             style="width: 40%"></div>
+                      </div>
+                      <span class="text-xs font-semibold text-gray-600 w-8 text-right">40%</span>
+                    </div>
+                  </td>
+                </tr>
+                
+                <tr class="hover:bg-gray-50 transition-colors">
+                  <td class="px-4 py-3 text-gray-400 font-medium text-xs">
+                    10
+                  </td>
+                  <td class="px-4 py-3 font-semibold text-gray-900">Revelvesvas</td>
+                  <td class="px-4 py-3 text-center text-gray-600">11</td>
+                  <td class="px-4 py-3 text-center font-bold text-emerald-600">4</td>
+                  <td class="px-4 py-3 text-center font-medium text-amber-500">3</td>
+                  <td class="px-4 py-3 text-center text-red-400">4</td>
+                  <td class="px-4 py-3">
+                    <div class="flex items-center gap-2">
+                      <div class="flex-1 bg-gray-100 rounded-full h-2 min-w-16">
+                        <div class="h-2 rounded-full bg-red-400"
+                             style="width: 36%"></div>
+                      </div>
+                      <span class="text-xs font-semibold text-gray-600 w-8 text-right">36%</span>
+                    </div>
+                  </td>
+                </tr>
+                
+                <tr class="hover:bg-gray-50 transition-colors">
+                  <td class="px-4 py-3 text-gray-400 font-medium text-xs">
+                    11
+                  </td>
+                  <td class="px-4 py-3 font-semibold text-gray-900">Pusse</td>
+                  <td class="px-4 py-3 text-center text-gray-600">3</td>
+                  <td class="px-4 py-3 text-center font-bold text-emerald-600">1</td>
+                  <td class="px-4 py-3 text-center font-medium text-amber-500">1</td>
+                  <td class="px-4 py-3 text-center text-red-400">1</td>
+                  <td class="px-4 py-3">
+                    <div class="flex items-center gap-2">
+                      <div class="flex-1 bg-gray-100 rounded-full h-2 min-w-16">
+                        <div class="h-2 rounded-full bg-red-400"
+                             style="width: 33%"></div>
+                      </div>
+                      <span class="text-xs font-semibold text-gray-600 w-8 text-right">33%</span>
+                    </div>
+                  </td>
+                </tr>
+                
+                <tr class="hover:bg-gray-50 transition-colors">
+                  <td class="px-4 py-3 text-gray-400 font-medium text-xs">
+                    12
+                  </td>
+                  <td class="px-4 py-3 font-semibold text-gray-900">Nikeolino</td>
+                  <td class="px-4 py-3 text-center text-gray-600">3</td>
+                  <td class="px-4 py-3 text-center font-bold text-emerald-600">1</td>
+                  <td class="px-4 py-3 text-center font-medium text-amber-500">2</td>
+                  <td class="px-4 py-3 text-center text-red-400">0</td>
+                  <td class="px-4 py-3">
+                    <div class="flex items-center gap-2">
+                      <div class="flex-1 bg-gray-100 rounded-full h-2 min-w-16">
+                        <div class="h-2 rounded-full bg-red-400"
+                             style="width: 33%"></div>
+                      </div>
+                      <span class="text-xs font-semibold text-gray-600 w-8 text-right">33%</span>
+                    </div>
+                  </td>
+                </tr>
+                
+                <tr class="hover:bg-gray-50 transition-colors">
+                  <td class="px-4 py-3 text-gray-400 font-medium text-xs">
+                    13
+                  </td>
+                  <td class="px-4 py-3 font-semibold text-gray-900">Borat</td>
+                  <td class="px-4 py-3 text-center text-gray-600">7</td>
+                  <td class="px-4 py-3 text-center font-bold text-emerald-600">2</td>
+                  <td class="px-4 py-3 text-center font-medium text-amber-500">2</td>
+                  <td class="px-4 py-3 text-center text-red-400">3</td>
+                  <td class="px-4 py-3">
+                    <div class="flex items-center gap-2">
+                      <div class="flex-1 bg-gray-100 rounded-full h-2 min-w-16">
+                        <div class="h-2 rounded-full bg-red-400"
+                             style="width: 29%"></div>
+                      </div>
+                      <span class="text-xs font-semibold text-gray-600 w-8 text-right">29%</span>
+                    </div>
+                  </td>
+                </tr>
+                
+                <tr class="hover:bg-gray-50 transition-colors">
+                  <td class="px-4 py-3 text-gray-400 font-medium text-xs">
+                    14
+                  </td>
+                  <td class="px-4 py-3 font-semibold text-gray-900">Mor</td>
+                  <td class="px-4 py-3 text-center text-gray-600">8</td>
+                  <td class="px-4 py-3 text-center font-bold text-emerald-600">2</td>
+                  <td class="px-4 py-3 text-center font-medium text-amber-500">1</td>
+                  <td class="px-4 py-3 text-center text-red-400">5</td>
+                  <td class="px-4 py-3">
+                    <div class="flex items-center gap-2">
+                      <div class="flex-1 bg-gray-100 rounded-full h-2 min-w-16">
+                        <div class="h-2 rounded-full bg-red-400"
+                             style="width: 25%"></div>
+                      </div>
+                      <span class="text-xs font-semibold text-gray-600 w-8 text-right">25%</span>
+                    </div>
+                  </td>
+                </tr>
+                
+                <tr class="hover:bg-gray-50 transition-colors">
+                  <td class="px-4 py-3 text-gray-400 font-medium text-xs">
+                    15
+                  </td>
+                  <td class="px-4 py-3 font-semibold text-gray-900">Remora</td>
+                  <td class="px-4 py-3 text-center text-gray-600">5</td>
+                  <td class="px-4 py-3 text-center font-bold text-emerald-600">1</td>
+                  <td class="px-4 py-3 text-center font-medium text-amber-500">2</td>
+                  <td class="px-4 py-3 text-center text-red-400">2</td>
+                  <td class="px-4 py-3">
+                    <div class="flex items-center gap-2">
+                      <div class="flex-1 bg-gray-100 rounded-full h-2 min-w-16">
+                        <div class="h-2 rounded-full bg-red-400"
+                             style="width: 20%"></div>
+                      </div>
+                      <span class="text-xs font-semibold text-gray-600 w-8 text-right">20%</span>
+                    </div>
+                  </td>
+                </tr>
+                
+                <tr class="hover:bg-gray-50 transition-colors">
+                  <td class="px-4 py-3 text-gray-400 font-medium text-xs">
+                    16
+                  </td>
+                  <td class="px-4 py-3 font-semibold text-gray-900">Luis Zé</td>
+                  <td class="px-4 py-3 text-center text-gray-600">11</td>
+                  <td class="px-4 py-3 text-center font-bold text-emerald-600">2</td>
+                  <td class="px-4 py-3 text-center font-medium text-amber-500">2</td>
+                  <td class="px-4 py-3 text-center text-red-400">7</td>
+                  <td class="px-4 py-3">
+                    <div class="flex items-center gap-2">
+                      <div class="flex-1 bg-gray-100 rounded-full h-2 min-w-16">
+                        <div class="h-2 rounded-full bg-red-400"
+                             style="width: 18%"></div>
+                      </div>
+                      <span class="text-xs font-semibold text-gray-600 w-8 text-right">18%</span>
+                    </div>
+                  </td>
+                </tr>
+                
+                <tr class="hover:bg-gray-50 transition-colors">
+                  <td class="px-4 py-3 text-gray-400 font-medium text-xs">
+                    17
+                  </td>
+                  <td class="px-4 py-3 font-semibold text-gray-900">Padre</td>
+                  <td class="px-4 py-3 text-center text-gray-600">11</td>
+                  <td class="px-4 py-3 text-center font-bold text-emerald-600">2</td>
+                  <td class="px-4 py-3 text-center font-medium text-amber-500">3</td>
+                  <td class="px-4 py-3 text-center text-red-400">6</td>
+                  <td class="px-4 py-3">
+                    <div class="flex items-center gap-2">
+                      <div class="flex-1 bg-gray-100 rounded-full h-2 min-w-16">
+                        <div class="h-2 rounded-full bg-red-400"
+                             style="width: 18%"></div>
+                      </div>
+                      <span class="text-xs font-semibold text-gray-600 w-8 text-right">18%</span>
+                    </div>
+                  </td>
+                </tr>
+                
+                <tr class="hover:bg-gray-50 transition-colors">
+                  <td class="px-4 py-3 text-gray-400 font-medium text-xs">
+                    18
+                  </td>
+                  <td class="px-4 py-3 font-semibold text-gray-900">Misto</td>
+                  <td class="px-4 py-3 text-center text-gray-600">11</td>
+                  <td class="px-4 py-3 text-center font-bold text-emerald-600">2</td>
+                  <td class="px-4 py-3 text-center font-medium text-amber-500">3</td>
+                  <td class="px-4 py-3 text-center text-red-400">6</td>
+                  <td class="px-4 py-3">
+                    <div class="flex items-center gap-2">
+                      <div class="flex-1 bg-gray-100 rounded-full h-2 min-w-16">
+                        <div class="h-2 rounded-full bg-red-400"
+                             style="width: 18%"></div>
+                      </div>
+                      <span class="text-xs font-semibold text-gray-600 w-8 text-right">18%</span>
+                    </div>
+                  </td>
+                </tr>
+                
+                <tr class="hover:bg-gray-50 transition-colors">
+                  <td class="px-4 py-3 text-gray-400 font-medium text-xs">
+                    19
+                  </td>
+                  <td class="px-4 py-3 font-semibold text-gray-900">Aseugarb</td>
+                  <td class="px-4 py-3 text-center text-gray-600">7</td>
+                  <td class="px-4 py-3 text-center font-bold text-emerald-600">1</td>
+                  <td class="px-4 py-3 text-center font-medium text-amber-500">1</td>
+                  <td class="px-4 py-3 text-center text-red-400">5</td>
+                  <td class="px-4 py-3">
+                    <div class="flex items-center gap-2">
+                      <div class="flex-1 bg-gray-100 rounded-full h-2 min-w-16">
+                        <div class="h-2 rounded-full bg-red-400"
+                             style="width: 14%"></div>
+                      </div>
+                      <span class="text-xs font-semibold text-gray-600 w-8 text-right">14%</span>
+                    </div>
+                  </td>
+                </tr>
+                
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="mt-6 bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+          <h3 class="font-semibold text-gray-700 mb-4">Win rate by player</h3>
+          <canvas id="chartLeaderboard"></canvas>
+        </div>
+        
+      </div>
+
+      <!-- Tab: Games History -->
+      <div id="tab-games" class="tab-pane hidden">
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+          
+          <div class="overflow-x-auto">
+            <table class="w-full text-sm">
+              <thead class="bg-gray-50 text-gray-500 uppercase text-xs tracking-wider">
+                <tr>
+                  <th class="px-4 py-3 text-left">Date</th>
+                  <th class="px-4 py-3 text-center">Score</th>
+                  <th class="px-4 py-3 text-center">Result</th>
+                  <th class="px-4 py-3 text-right">Distance</th>
+                  <th class="px-4 py-3 text-right">Duration</th>
+                  <th class="px-4 py-3 text-right">Avg HR</th>
+                  <th class="px-4 py-3 text-right">Calories</th>
+                  <th class="px-4 py-3 text-right">Avg Speed</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-gray-50">
+                
+                
+                
+                
+                <tr class="hover:bg-gray-50 transition-colors">
+                  <td class="px-4 py-3 font-medium text-gray-900">2026-04-20</td>
+                  <td class="px-4 py-3 text-center">
+                    
+                    <span class="font-bold text-amber-600 bg-amber-50 px-2 py-0.5 rounded text-xs">8</span>
+                    <span class="text-gray-400 mx-1">–</span>
+                    <span class="font-bold text-amber-600 bg-amber-50 px-2 py-0.5 rounded text-xs">8</span>
+                    
+                  </td>
+                  <td class="px-4 py-3 text-center text-xs font-medium">
+                    
+                      <span class="text-amber-600 bg-amber-50 px-2 py-0.5 rounded-full">Draw</span>
+                      
+                    
+                  </td>
+                  <td class="px-4 py-3 text-right text-gray-700">4.84 km</td>
+                  <td class="px-4 py-3 text-right text-gray-700">01:04:40</td>
+                  <td class="px-4 py-3 text-right">
+                    
+                    <span class="inline-flex items-center gap-1">
+                      <span class="w-2 h-2 rounded-full bg-green-400"></span>
+                      135
+                    </span>
+                    
+                  </td>
+                  <td class="px-4 py-3 text-right text-gray-700">592</td>
+                  <td class="px-4 py-3 text-right text-gray-700">4.5 km/h</td>
+                </tr>
+                
+                
+                
+                
+                <tr class="hover:bg-gray-50 transition-colors">
+                  <td class="px-4 py-3 font-medium text-gray-900">2026-04-13</td>
+                  <td class="px-4 py-3 text-center">
+                    
+                    <span class="font-bold text-gray-400 px-2 py-0.5 rounded text-xs">10</span>
+                    <span class="text-gray-400 mx-1">–</span>
+                    <span class="font-bold text-white bg-emerald-500 px-2 py-0.5 rounded text-xs">11</span>
+                    
+                  </td>
+                  <td class="px-4 py-3 text-center text-xs font-medium">
+                    
+                      <span class="text-white bg-gray-700 px-2 py-0.5 rounded-full">Pretos</span>
+                      
+                    
+                  </td>
+                  <td class="px-4 py-3 text-right text-gray-700">6.93 km</td>
+                  <td class="px-4 py-3 text-right text-gray-700">01:21:13</td>
+                  <td class="px-4 py-3 text-right">
+                    
+                    <span class="inline-flex items-center gap-1">
+                      <span class="w-2 h-2 rounded-full bg-amber-400"></span>
+                      136
+                    </span>
+                    
+                  </td>
+                  <td class="px-4 py-3 text-right text-gray-700">775</td>
+                  <td class="px-4 py-3 text-right text-gray-700">5.1 km/h</td>
+                </tr>
+                
+                
+                
+                
+                <tr class="hover:bg-gray-50 transition-colors">
+                  <td class="px-4 py-3 font-medium text-gray-900">2026-04-06</td>
+                  <td class="px-4 py-3 text-center">
+                    
+                    <span class="font-bold text-gray-400 px-2 py-0.5 rounded text-xs">4</span>
+                    <span class="text-gray-400 mx-1">–</span>
+                    <span class="font-bold text-white bg-emerald-500 px-2 py-0.5 rounded text-xs">7</span>
+                    
+                  </td>
+                  <td class="px-4 py-3 text-center text-xs font-medium">
+                    
+                      <span class="text-white bg-gray-700 px-2 py-0.5 rounded-full">Pretos</span>
+                      
+                    
+                  </td>
+                  <td class="px-4 py-3 text-right text-gray-700">1.51 km</td>
+                  <td class="px-4 py-3 text-right text-gray-700">00:56:27</td>
+                  <td class="px-4 py-3 text-right">
+                    
+                    <span class="inline-flex items-center gap-1">
+                      <span class="w-2 h-2 rounded-full bg-amber-400"></span>
+                      139
+                    </span>
+                    
+                  </td>
+                  <td class="px-4 py-3 text-right text-gray-700">548</td>
+                  <td class="px-4 py-3 text-right text-gray-700">1.6 km/h</td>
+                </tr>
+                
+                
+                
+                
+                <tr class="hover:bg-gray-50 transition-colors">
+                  <td class="px-4 py-3 font-medium text-gray-900">2026-03-23</td>
+                  <td class="px-4 py-3 text-center">
+                    
+                    <span class="font-bold text-gray-400 px-2 py-0.5 rounded text-xs">8</span>
+                    <span class="text-gray-400 mx-1">–</span>
+                    <span class="font-bold text-white bg-emerald-500 px-2 py-0.5 rounded text-xs">10</span>
+                    
+                  </td>
+                  <td class="px-4 py-3 text-center text-xs font-medium">
+                    
+                      <span class="text-white bg-gray-700 px-2 py-0.5 rounded-full">Pretos</span>
+                      
+                    
+                  </td>
+                  <td class="px-4 py-3 text-right text-gray-700">5.47 km</td>
+                  <td class="px-4 py-3 text-right text-gray-700">01:02:46</td>
+                  <td class="px-4 py-3 text-right">
+                    
+                    <span class="inline-flex items-center gap-1">
+                      <span class="w-2 h-2 rounded-full bg-green-400"></span>
+                      132
+                    </span>
+                    
+                  </td>
+                  <td class="px-4 py-3 text-right text-gray-700">587</td>
+                  <td class="px-4 py-3 text-right text-gray-700">5.2 km/h</td>
+                </tr>
+                
+                
+                
+                
+                <tr class="hover:bg-gray-50 transition-colors">
+                  <td class="px-4 py-3 font-medium text-gray-900">2026-03-16</td>
+                  <td class="px-4 py-3 text-center">
+                    
+                    <span class="font-bold text-gray-400 px-2 py-0.5 rounded text-xs">3</span>
+                    <span class="text-gray-400 mx-1">–</span>
+                    <span class="font-bold text-white bg-emerald-500 px-2 py-0.5 rounded text-xs">9</span>
+                    
+                  </td>
+                  <td class="px-4 py-3 text-center text-xs font-medium">
+                    
+                      <span class="text-white bg-gray-700 px-2 py-0.5 rounded-full">Pretos</span>
+                      
+                    
+                  </td>
+                  <td class="px-4 py-3 text-right text-gray-700">1.30 km</td>
+                  <td class="px-4 py-3 text-right text-gray-700">00:50:17</td>
+                  <td class="px-4 py-3 text-right">
+                    
+                    <span class="inline-flex items-center gap-1">
+                      <span class="w-2 h-2 rounded-full bg-amber-400"></span>
+                      136
+                    </span>
+                    
+                  </td>
+                  <td class="px-4 py-3 text-right text-gray-700">481</td>
+                  <td class="px-4 py-3 text-right text-gray-700">1.6 km/h</td>
+                </tr>
+                
+                
+                
+                
+                <tr class="hover:bg-gray-50 transition-colors">
+                  <td class="px-4 py-3 font-medium text-gray-900">2026-01-19</td>
+                  <td class="px-4 py-3 text-center">
+                    
+                    <span class="font-bold text-gray-400 px-2 py-0.5 rounded text-xs">12</span>
+                    <span class="text-gray-400 mx-1">–</span>
+                    <span class="font-bold text-white bg-emerald-500 px-2 py-0.5 rounded text-xs">13</span>
+                    
+                  </td>
+                  <td class="px-4 py-3 text-center text-xs font-medium">
+                    
+                      <span class="text-white bg-gray-700 px-2 py-0.5 rounded-full">Pretos</span>
+                      
+                    
+                  </td>
+                  <td class="px-4 py-3 text-right text-gray-700">4.65 km</td>
+                  <td class="px-4 py-3 text-right text-gray-700">01:08:42</td>
+                  <td class="px-4 py-3 text-right">
+                    
+                    <span class="inline-flex items-center gap-1">
+                      <span class="w-2 h-2 rounded-full bg-green-400"></span>
+                      122
+                    </span>
+                    
+                  </td>
+                  <td class="px-4 py-3 text-right text-gray-700">469</td>
+                  <td class="px-4 py-3 text-right text-gray-700">4.1 km/h</td>
+                </tr>
+                
+                
+                
+                
+                <tr class="hover:bg-gray-50 transition-colors">
+                  <td class="px-4 py-3 font-medium text-gray-900">2026-01-12</td>
+                  <td class="px-4 py-3 text-center">
+                    
+                    <span class="font-bold text-white bg-emerald-500 px-2 py-0.5 rounded text-xs">9</span>
+                    <span class="text-gray-400 mx-1">–</span>
+                    <span class="font-bold text-gray-400 px-2 py-0.5 rounded text-xs">6</span>
+                    
+                  </td>
+                  <td class="px-4 py-3 text-center text-xs font-medium">
+                    
+                      <span class="text-white bg-emerald-500 px-2 py-0.5 rounded-full">Brancos</span>
+                      
+                    
+                  </td>
+                  <td class="px-4 py-3 text-right text-gray-700">6.90 km</td>
+                  <td class="px-4 py-3 text-right text-gray-700">01:24:13</td>
+                  <td class="px-4 py-3 text-right">
+                    
+                    <span class="inline-flex items-center gap-1">
+                      <span class="w-2 h-2 rounded-full bg-amber-400"></span>
+                      140
+                    </span>
+                    
+                  </td>
+                  <td class="px-4 py-3 text-right text-gray-700">784</td>
+                  <td class="px-4 py-3 text-right text-gray-700">4.9 km/h</td>
+                </tr>
+                
+                
+                
+                
+                <tr class="hover:bg-gray-50 transition-colors">
+                  <td class="px-4 py-3 font-medium text-gray-900">2025-12-29</td>
+                  <td class="px-4 py-3 text-center">
+                    
+                    <span class="font-bold text-amber-600 bg-amber-50 px-2 py-0.5 rounded text-xs">7</span>
+                    <span class="text-gray-400 mx-1">–</span>
+                    <span class="font-bold text-amber-600 bg-amber-50 px-2 py-0.5 rounded text-xs">7</span>
+                    
+                  </td>
+                  <td class="px-4 py-3 text-center text-xs font-medium">
+                    
+                      <span class="text-amber-600 bg-amber-50 px-2 py-0.5 rounded-full">Draw</span>
+                      
+                    
+                  </td>
+                  <td class="px-4 py-3 text-right text-gray-700">4.78 km</td>
+                  <td class="px-4 py-3 text-right text-gray-700">01:05:36</td>
+                  <td class="px-4 py-3 text-right">
+                    
+                    <span class="inline-flex items-center gap-1">
+                      <span class="w-2 h-2 rounded-full bg-green-400"></span>
+                      128
+                    </span>
+                    
+                  </td>
+                  <td class="px-4 py-3 text-right text-gray-700">541</td>
+                  <td class="px-4 py-3 text-right text-gray-700">4.4 km/h</td>
+                </tr>
+                
+                
+                
+                
+                <tr class="hover:bg-gray-50 transition-colors">
+                  <td class="px-4 py-3 font-medium text-gray-900">2025-12-22</td>
+                  <td class="px-4 py-3 text-center">
+                    
+                    <span class="font-bold text-gray-400 px-2 py-0.5 rounded text-xs">2</span>
+                    <span class="text-gray-400 mx-1">–</span>
+                    <span class="font-bold text-white bg-emerald-500 px-2 py-0.5 rounded text-xs">11</span>
+                    
+                  </td>
+                  <td class="px-4 py-3 text-center text-xs font-medium">
+                    
+                      <span class="text-white bg-gray-700 px-2 py-0.5 rounded-full">Pretos</span>
+                      
+                    
+                  </td>
+                  <td class="px-4 py-3 text-right text-gray-700">2.68 km</td>
+                  <td class="px-4 py-3 text-right text-gray-700">00:54:51</td>
+                  <td class="px-4 py-3 text-right">
+                    
+                    <span class="inline-flex items-center gap-1">
+                      <span class="w-2 h-2 rounded-full bg-green-400"></span>
+                      129
+                    </span>
+                    
+                  </td>
+                  <td class="px-4 py-3 text-right text-gray-700">456</td>
+                  <td class="px-4 py-3 text-right text-gray-700">2.9 km/h</td>
+                </tr>
+                
+                
+                
+                
+                <tr class="hover:bg-gray-50 transition-colors">
+                  <td class="px-4 py-3 font-medium text-gray-900">2025-12-15</td>
+                  <td class="px-4 py-3 text-center">
+                    
+                    <span class="font-bold text-white bg-emerald-500 px-2 py-0.5 rounded text-xs">12</span>
+                    <span class="text-gray-400 mx-1">–</span>
+                    <span class="font-bold text-gray-400 px-2 py-0.5 rounded text-xs">9</span>
+                    
+                  </td>
+                  <td class="px-4 py-3 text-center text-xs font-medium">
+                    
+                      <span class="text-white bg-emerald-500 px-2 py-0.5 rounded-full">Brancos</span>
+                      
+                    
+                  </td>
+                  <td class="px-4 py-3 text-right text-gray-700">5.55 km</td>
+                  <td class="px-4 py-3 text-right text-gray-700">01:18:19</td>
+                  <td class="px-4 py-3 text-right">
+                    
+                    <span class="inline-flex items-center gap-1">
+                      <span class="w-2 h-2 rounded-full bg-green-400"></span>
+                      129
+                    </span>
+                    
+                  </td>
+                  <td class="px-4 py-3 text-right text-gray-700">622</td>
+                  <td class="px-4 py-3 text-right text-gray-700">4.3 km/h</td>
+                </tr>
+                
+                
+                
+                
+                <tr class="hover:bg-gray-50 transition-colors">
+                  <td class="px-4 py-3 font-medium text-gray-900">2025-12-08</td>
+                  <td class="px-4 py-3 text-center">
+                    
+                    <span class="font-bold text-gray-400 px-2 py-0.5 rounded text-xs">12</span>
+                    <span class="text-gray-400 mx-1">–</span>
+                    <span class="font-bold text-white bg-emerald-500 px-2 py-0.5 rounded text-xs">13</span>
+                    
+                  </td>
+                  <td class="px-4 py-3 text-center text-xs font-medium">
+                    
+                      <span class="text-white bg-gray-700 px-2 py-0.5 rounded-full">Pretos</span>
+                      
+                    
+                  </td>
+                  <td class="px-4 py-3 text-right text-gray-700">6.44 km</td>
+                  <td class="px-4 py-3 text-right text-gray-700">01:39:50</td>
+                  <td class="px-4 py-3 text-right">
+                    
+                    <span class="inline-flex items-center gap-1">
+                      <span class="w-2 h-2 rounded-full bg-amber-400"></span>
+                      136
+                    </span>
+                    
+                  </td>
+                  <td class="px-4 py-3 text-right text-gray-700">889</td>
+                  <td class="px-4 py-3 text-right text-gray-700">3.9 km/h</td>
+                </tr>
+                
+                
+                
+                
+                <tr class="hover:bg-gray-50 transition-colors">
+                  <td class="px-4 py-3 font-medium text-gray-900">2025-11-17</td>
+                  <td class="px-4 py-3 text-center">
+                    
+                    <span class="text-gray-300">—</span>
+                    
+                  </td>
+                  <td class="px-4 py-3 text-center text-xs font-medium">
+                    
+                  </td>
+                  <td class="px-4 py-3 text-right text-gray-700">0.00 km</td>
+                  <td class="px-4 py-3 text-right text-gray-700">00:00:48.2</td>
+                  <td class="px-4 py-3 text-right">
+                    
+                    <span class="inline-flex items-center gap-1">
+                      <span class="w-2 h-2 rounded-full bg-green-400"></span>
+                      64
+                    </span>
+                    
+                  </td>
+                  <td class="px-4 py-3 text-right text-gray-700">1</td>
+                  <td class="px-4 py-3 text-right text-gray-700">-- km/h</td>
+                </tr>
+                
+              </tbody>
+            </table>
+          </div>
+          
+        </div>
+      </div>
+
+      <!-- Tab: Charts -->
+      <div id="tab-charts" class="tab-pane hidden">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+            <h3 class="font-semibold text-gray-700 mb-4">Distance per game (km)</h3>
+            <canvas id="chartDistance" height="200"></canvas>
+          </div>
+          <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+            <h3 class="font-semibold text-gray-700 mb-4">Heart rate per game (bpm)</h3>
+            <canvas id="chartHR" height="200"></canvas>
+          </div>
+          <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+            <h3 class="font-semibold text-gray-700 mb-4">Calories per game</h3>
+            <canvas id="chartCalories" height="200"></canvas>
+          </div>
+          <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+            <h3 class="font-semibold text-gray-700 mb-4">Scores per game</h3>
+            <canvas id="chartScores" height="200"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab: Teams -->
+      <div id="tab-teams" class="tab-pane hidden">
+        
+        <div class="space-y-4">
+          
+          
+          
+          
+          <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+            <button
+              class="w-full px-6 py-4 text-left flex items-center justify-between hover:bg-gray-50 transition-colors"
+              onclick="toggleAccordion('acc-1')"
+            >
+              <span class="font-semibold text-gray-900">2026-04-20</span>
+              <div class="flex items-center gap-4 text-sm">
+                
+                <span class="font-bold text-amber-500">⚪ 8</span>
+                <span class="text-gray-300">–</span>
+                <span class="font-bold text-amber-500">8 ⚫</span>
+                
+                <span id="acc-icon-1" class="text-gray-400 ml-2">▼</span>
+              </div>
+            </button>
+            <div id="acc-1" class="hidden border-t border-gray-100">
+              <div class="p-6 grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <div>
+                  <h4 class="font-semibold text-gray-600 mb-3 flex items-center gap-2">
+                    <span class="w-4 h-4 rounded-full bg-white border-2 border-gray-300 inline-block"></span>
+                    Brancos
+                    
+                    <span class="ml-1 text-lg font-bold text-amber-500">8</span>
+                    <span class="ml-auto text-xs font-semibold text-amber-500 bg-amber-50 px-2 py-0.5 rounded-full">DRAW</span>
+                    
+                    
+                  </h4>
+                  <ol class="space-y-1">
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">1</span>Luis Zé
+                    </li>
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">2</span>Misto
+                    </li>
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">3</span>Revelvesvas
+                    </li>
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">4</span>Amigo Nuno
+                    </li>
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">5</span>Shiuvaca
+                    </li>
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">6</span>Nikeolino
+                    </li>
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">7</span>Remora
+                    </li>
+                    
+                  </ol>
+                </div>
+                <div>
+                  <h4 class="font-semibold text-gray-600 mb-3 flex items-center gap-2">
+                    <span class="w-4 h-4 rounded-full bg-gray-800 inline-block"></span>
+                    Pretos
+                    
+                    <span class="ml-1 text-lg font-bold text-amber-500">8</span>
+                    <span class="ml-auto text-xs font-semibold text-amber-500 bg-amber-50 px-2 py-0.5 rounded-full">DRAW</span>
+                    
+                    
+                  </h4>
+                  <ol class="space-y-1">
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">1</span>Padre
+                    </li>
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">2</span>Ze tolo
+                    </li>
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">3</span>Barbs
+                    </li>
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">4</span>Felix
+                    </li>
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">5</span>Premium
+                    </li>
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">6</span>Chupa
+                    </li>
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">7</span>Paulo
+                    </li>
+                    
+                  </ol>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          
+          
+          
+          <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+            <button
+              class="w-full px-6 py-4 text-left flex items-center justify-between hover:bg-gray-50 transition-colors"
+              onclick="toggleAccordion('acc-2')"
+            >
+              <span class="font-semibold text-gray-900">2026-04-13</span>
+              <div class="flex items-center gap-4 text-sm">
+                
+                <span class="font-bold text-gray-400">⚪ 10</span>
+                <span class="text-gray-300">–</span>
+                <span class="font-bold text-emerald-600">11 ⚫</span>
+                
+                <span id="acc-icon-2" class="text-gray-400 ml-2">▼</span>
+              </div>
+            </button>
+            <div id="acc-2" class="hidden border-t border-gray-100">
+              <div class="p-6 grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <div>
+                  <h4 class="font-semibold text-gray-600 mb-3 flex items-center gap-2">
+                    <span class="w-4 h-4 rounded-full bg-white border-2 border-gray-300 inline-block"></span>
+                    Brancos
+                    
+                    <span class="ml-1 text-lg font-bold text-gray-400">10</span>
+                    <span class="ml-auto text-xs text-gray-400">LOSS</span>
+                    
+                  </h4>
+                  <ol class="space-y-1">
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">1</span>Chupa
+                    </li>
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">2</span>Amigo do Salto
+                    </li>
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">3</span>Aseugarb
+                    </li>
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">4</span>Revelvesvas
+                    </li>
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">5</span>Mor
+                    </li>
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">6</span>Remora
+                    </li>
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">7</span>Tronco
+                    </li>
+                    
+                  </ol>
+                </div>
+                <div>
+                  <h4 class="font-semibold text-gray-600 mb-3 flex items-center gap-2">
+                    <span class="w-4 h-4 rounded-full bg-gray-800 inline-block"></span>
+                    Pretos
+                    
+                    <span class="ml-1 text-lg font-bold text-emerald-600">11</span>
+                    <span class="ml-auto text-xs font-semibold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full">WIN</span>
+                    
+                    
+                  </h4>
+                  <ol class="space-y-1">
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">1</span>Salto
+                    </li>
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">2</span>Bocesso
+                    </li>
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">3</span>Luis Zé
+                    </li>
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">4</span>Shiuvaca
+                    </li>
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">5</span>Misto
+                    </li>
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">6</span>Padre
+                    </li>
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">7</span>Komossos
+                    </li>
+                    
+                  </ol>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          
+          
+          
+          <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+            <button
+              class="w-full px-6 py-4 text-left flex items-center justify-between hover:bg-gray-50 transition-colors"
+              onclick="toggleAccordion('acc-3')"
+            >
+              <span class="font-semibold text-gray-900">2026-04-06</span>
+              <div class="flex items-center gap-4 text-sm">
+                
+                <span class="font-bold text-gray-400">⚪ 4</span>
+                <span class="text-gray-300">–</span>
+                <span class="font-bold text-emerald-600">7 ⚫</span>
+                
+                <span id="acc-icon-3" class="text-gray-400 ml-2">▼</span>
+              </div>
+            </button>
+            <div id="acc-3" class="hidden border-t border-gray-100">
+              <div class="p-6 grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <div>
+                  <h4 class="font-semibold text-gray-600 mb-3 flex items-center gap-2">
+                    <span class="w-4 h-4 rounded-full bg-white border-2 border-gray-300 inline-block"></span>
+                    Brancos
+                    
+                    <span class="ml-1 text-lg font-bold text-gray-400">4</span>
+                    <span class="ml-auto text-xs text-gray-400">LOSS</span>
+                    
+                  </h4>
+                  <ol class="space-y-1">
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">1</span>Luis Zé
+                    </li>
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">2</span>Revelvesvas
+                    </li>
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">3</span>Padre
+                    </li>
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">4</span>Mor
+                    </li>
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">5</span>Shiuvaca
+                    </li>
+                    
+                  </ol>
+                </div>
+                <div>
+                  <h4 class="font-semibold text-gray-600 mb-3 flex items-center gap-2">
+                    <span class="w-4 h-4 rounded-full bg-gray-800 inline-block"></span>
+                    Pretos
+                    
+                    <span class="ml-1 text-lg font-bold text-emerald-600">7</span>
+                    <span class="ml-auto text-xs font-semibold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full">WIN</span>
+                    
+                    
+                  </h4>
+                  <ol class="space-y-1">
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">1</span>Nikeolino
+                    </li>
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">2</span>Tronco
+                    </li>
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">3</span>Bocesso
+                    </li>
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">4</span>Misto
+                    </li>
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">5</span>Lusco
+                    </li>
+                    
+                  </ol>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          
+          
+          
+          <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+            <button
+              class="w-full px-6 py-4 text-left flex items-center justify-between hover:bg-gray-50 transition-colors"
+              onclick="toggleAccordion('acc-4')"
+            >
+              <span class="font-semibold text-gray-900">2026-03-23</span>
+              <div class="flex items-center gap-4 text-sm">
+                
+                <span class="font-bold text-gray-400">⚪ 8</span>
+                <span class="text-gray-300">–</span>
+                <span class="font-bold text-emerald-600">10 ⚫</span>
+                
+                <span id="acc-icon-4" class="text-gray-400 ml-2">▼</span>
+              </div>
+            </button>
+            <div id="acc-4" class="hidden border-t border-gray-100">
+              <div class="p-6 grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <div>
+                  <h4 class="font-semibold text-gray-600 mb-3 flex items-center gap-2">
+                    <span class="w-4 h-4 rounded-full bg-white border-2 border-gray-300 inline-block"></span>
+                    Brancos
+                    
+                    <span class="ml-1 text-lg font-bold text-gray-400">8</span>
+                    <span class="ml-auto text-xs text-gray-400">LOSS</span>
+                    
+                  </h4>
+                  <ol class="space-y-1">
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">1</span>Luis Zé
+                    </li>
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">2</span>Amigo do Lusco
+                    </li>
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">3</span>Mor
+                    </li>
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">4</span>Misto
+                    </li>
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">5</span>Pusse
+                    </li>
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">6</span>Tronco
+                    </li>
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">7</span>Padre
+                    </li>
+                    
+                  </ol>
+                </div>
+                <div>
+                  <h4 class="font-semibold text-gray-600 mb-3 flex items-center gap-2">
+                    <span class="w-4 h-4 rounded-full bg-gray-800 inline-block"></span>
+                    Pretos
+                    
+                    <span class="ml-1 text-lg font-bold text-emerald-600">10</span>
+                    <span class="ml-auto text-xs font-semibold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full">WIN</span>
+                    
+                    
+                  </h4>
+                  <ol class="space-y-1">
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">1</span>Revelvesvas
+                    </li>
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">2</span>Salto
+                    </li>
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">3</span>Lusco
+                    </li>
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">4</span>Bocesso
+                    </li>
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">5</span>Chupa
+                    </li>
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">6</span>Shiuvaca
+                    </li>
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">7</span>Chibata
+                    </li>
+                    
+                  </ol>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          
+          
+          
+          <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+            <button
+              class="w-full px-6 py-4 text-left flex items-center justify-between hover:bg-gray-50 transition-colors"
+              onclick="toggleAccordion('acc-5')"
+            >
+              <span class="font-semibold text-gray-900">2026-03-16</span>
+              <div class="flex items-center gap-4 text-sm">
+                
+                <span class="font-bold text-gray-400">⚪ 3</span>
+                <span class="text-gray-300">–</span>
+                <span class="font-bold text-emerald-600">9 ⚫</span>
+                
+                <span id="acc-icon-5" class="text-gray-400 ml-2">▼</span>
+              </div>
+            </button>
+            <div id="acc-5" class="hidden border-t border-gray-100">
+              <div class="p-6 grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <div>
+                  <h4 class="font-semibold text-gray-600 mb-3 flex items-center gap-2">
+                    <span class="w-4 h-4 rounded-full bg-white border-2 border-gray-300 inline-block"></span>
+                    Brancos
+                    
+                    <span class="ml-1 text-lg font-bold text-gray-400">3</span>
+                    <span class="ml-auto text-xs text-gray-400">LOSS</span>
+                    
+                  </h4>
+                  <ol class="space-y-1">
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">1</span>Mor
+                    </li>
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">2</span>Luis Zé
+                    </li>
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">3</span>Misto
+                    </li>
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">4</span>Padre
+                    </li>
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">5</span>Shiuvaca
+                    </li>
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">6</span>Revelvesvas
+                    </li>
+                    
+                  </ol>
+                </div>
+                <div>
+                  <h4 class="font-semibold text-gray-600 mb-3 flex items-center gap-2">
+                    <span class="w-4 h-4 rounded-full bg-gray-800 inline-block"></span>
+                    Pretos
+                    
+                    <span class="ml-1 text-lg font-bold text-emerald-600">9</span>
+                    <span class="ml-auto text-xs font-semibold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full">WIN</span>
+                    
+                    
+                  </h4>
+                  <ol class="space-y-1">
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">1</span>Komossos
+                    </li>
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">2</span>Salto
+                    </li>
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">3</span>Ritalina
+                    </li>
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">4</span>Bocesso
+                    </li>
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">5</span>Tronco
+                    </li>
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">6</span>Pés de Sapo
+                    </li>
+                    
+                  </ol>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          
+          
+          
+          <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+            <button
+              class="w-full px-6 py-4 text-left flex items-center justify-between hover:bg-gray-50 transition-colors"
+              onclick="toggleAccordion('acc-6')"
+            >
+              <span class="font-semibold text-gray-900">2026-01-19</span>
+              <div class="flex items-center gap-4 text-sm">
+                
+                <span class="font-bold text-gray-400">⚪ 12</span>
+                <span class="text-gray-300">–</span>
+                <span class="font-bold text-emerald-600">13 ⚫</span>
+                
+                <span id="acc-icon-6" class="text-gray-400 ml-2">▼</span>
+              </div>
+            </button>
+            <div id="acc-6" class="hidden border-t border-gray-100">
+              <div class="p-6 grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <div>
+                  <h4 class="font-semibold text-gray-600 mb-3 flex items-center gap-2">
+                    <span class="w-4 h-4 rounded-full bg-white border-2 border-gray-300 inline-block"></span>
+                    Brancos
+                    
+                    <span class="ml-1 text-lg font-bold text-gray-400">12</span>
+                    <span class="ml-auto text-xs text-gray-400">LOSS</span>
+                    
+                  </h4>
+                  <ol class="space-y-1">
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">1</span>Chupa
+                    </li>
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">2</span>Ramiro
+                    </li>
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">3</span>Misto
+                    </li>
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">4</span>Padre
+                    </li>
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">5</span>Aseugarb
+                    </li>
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">6</span>Luis Zé
+                    </li>
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">7</span>Remora
+                    </li>
+                    
+                  </ol>
+                </div>
+                <div>
+                  <h4 class="font-semibold text-gray-600 mb-3 flex items-center gap-2">
+                    <span class="w-4 h-4 rounded-full bg-gray-800 inline-block"></span>
+                    Pretos
+                    
+                    <span class="ml-1 text-lg font-bold text-emerald-600">13</span>
+                    <span class="ml-auto text-xs font-semibold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full">WIN</span>
+                    
+                    
+                  </h4>
+                  <ol class="space-y-1">
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">1</span>Borat
+                    </li>
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">2</span>Mor
+                    </li>
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">3</span>Shiuvaca
+                    </li>
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">4</span>Pés de Sapo
+                    </li>
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">5</span>Revelvesvas
+                    </li>
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">6</span>Salto
+                    </li>
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">7</span>Komossos
+                    </li>
+                    
+                  </ol>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          
+          
+          
+          <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+            <button
+              class="w-full px-6 py-4 text-left flex items-center justify-between hover:bg-gray-50 transition-colors"
+              onclick="toggleAccordion('acc-7')"
+            >
+              <span class="font-semibold text-gray-900">2026-01-12</span>
+              <div class="flex items-center gap-4 text-sm">
+                
+                <span class="font-bold text-emerald-600">⚪ 9</span>
+                <span class="text-gray-300">–</span>
+                <span class="font-bold text-gray-400">6 ⚫</span>
+                
+                <span id="acc-icon-7" class="text-gray-400 ml-2">▼</span>
+              </div>
+            </button>
+            <div id="acc-7" class="hidden border-t border-gray-100">
+              <div class="p-6 grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <div>
+                  <h4 class="font-semibold text-gray-600 mb-3 flex items-center gap-2">
+                    <span class="w-4 h-4 rounded-full bg-white border-2 border-gray-300 inline-block"></span>
+                    Brancos
+                    
+                    <span class="ml-1 text-lg font-bold text-emerald-600">9</span>
+                    <span class="ml-auto text-xs font-semibold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full">WIN</span>
+                    
+                    
+                  </h4>
+                  <ol class="space-y-1">
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">1</span>Mor
+                    </li>
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">2</span>Titi
+                    </li>
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">3</span>Lusco
+                    </li>
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">4</span>Amigo do Lusco
+                    </li>
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">5</span>Chupa
+                    </li>
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">6</span>Revelvesvas
+                    </li>
+                    
+                  </ol>
+                </div>
+                <div>
+                  <h4 class="font-semibold text-gray-600 mb-3 flex items-center gap-2">
+                    <span class="w-4 h-4 rounded-full bg-gray-800 inline-block"></span>
+                    Pretos
+                    
+                    <span class="ml-1 text-lg font-bold text-gray-400">6</span>
+                    <span class="ml-auto text-xs text-gray-400">LOSS</span>
+                    
+                  </h4>
+                  <ol class="space-y-1">
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">1</span>Aseugarb
+                    </li>
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">2</span>Misto
+                    </li>
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">3</span>Borat
+                    </li>
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">4</span>Luis Zé
+                    </li>
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">5</span>Pés de Sapo
+                    </li>
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">6</span>Shiuvaca
+                    </li>
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">7</span>Ritalina
+                    </li>
+                    
+                  </ol>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          
+          
+          
+          <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+            <button
+              class="w-full px-6 py-4 text-left flex items-center justify-between hover:bg-gray-50 transition-colors"
+              onclick="toggleAccordion('acc-8')"
+            >
+              <span class="font-semibold text-gray-900">2025-12-29</span>
+              <div class="flex items-center gap-4 text-sm">
+                
+                <span class="font-bold text-amber-500">⚪ 7</span>
+                <span class="text-gray-300">–</span>
+                <span class="font-bold text-amber-500">7 ⚫</span>
+                
+                <span id="acc-icon-8" class="text-gray-400 ml-2">▼</span>
+              </div>
+            </button>
+            <div id="acc-8" class="hidden border-t border-gray-100">
+              <div class="p-6 grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <div>
+                  <h4 class="font-semibold text-gray-600 mb-3 flex items-center gap-2">
+                    <span class="w-4 h-4 rounded-full bg-white border-2 border-gray-300 inline-block"></span>
+                    Brancos
+                    
+                    <span class="ml-1 text-lg font-bold text-amber-500">7</span>
+                    <span class="ml-auto text-xs font-semibold text-amber-500 bg-amber-50 px-2 py-0.5 rounded-full">DRAW</span>
+                    
+                    
+                  </h4>
+                  <ol class="space-y-1">
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">1</span>Tronco
+                    </li>
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">2</span>Misto
+                    </li>
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">3</span>Revelvesvas
+                    </li>
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">4</span>Padre
+                    </li>
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">5</span>Nikeolino
+                    </li>
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">6</span>Bocesso
+                    </li>
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">7</span>Lusco
+                    </li>
+                    
+                  </ol>
+                </div>
+                <div>
+                  <h4 class="font-semibold text-gray-600 mb-3 flex items-center gap-2">
+                    <span class="w-4 h-4 rounded-full bg-gray-800 inline-block"></span>
+                    Pretos
+                    
+                    <span class="ml-1 text-lg font-bold text-amber-500">7</span>
+                    <span class="ml-auto text-xs font-semibold text-amber-500 bg-amber-50 px-2 py-0.5 rounded-full">DRAW</span>
+                    
+                    
+                  </h4>
+                  <ol class="space-y-1">
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">1</span>Bulldozer
+                    </li>
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">2</span>Chupa
+                    </li>
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">3</span>Aseugarb
+                    </li>
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">4</span>Salto
+                    </li>
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">5</span>Shiuvaca
+                    </li>
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">6</span>Borat
+                    </li>
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">7</span>Ramboia
+                    </li>
+                    
+                  </ol>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          
+          
+          
+          <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+            <button
+              class="w-full px-6 py-4 text-left flex items-center justify-between hover:bg-gray-50 transition-colors"
+              onclick="toggleAccordion('acc-9')"
+            >
+              <span class="font-semibold text-gray-900">2025-12-22</span>
+              <div class="flex items-center gap-4 text-sm">
+                
+                <span class="font-bold text-gray-400">⚪ 2</span>
+                <span class="text-gray-300">–</span>
+                <span class="font-bold text-emerald-600">11 ⚫</span>
+                
+                <span id="acc-icon-9" class="text-gray-400 ml-2">▼</span>
+              </div>
+            </button>
+            <div id="acc-9" class="hidden border-t border-gray-100">
+              <div class="p-6 grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <div>
+                  <h4 class="font-semibold text-gray-600 mb-3 flex items-center gap-2">
+                    <span class="w-4 h-4 rounded-full bg-white border-2 border-gray-300 inline-block"></span>
+                    Brancos
+                    
+                    <span class="ml-1 text-lg font-bold text-gray-400">2</span>
+                    <span class="ml-auto text-xs text-gray-400">LOSS</span>
+                    
+                  </h4>
+                  <ol class="space-y-1">
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">1</span>Revelvesvas
+                    </li>
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">2</span>Lusco
+                    </li>
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">3</span>Aseugarb
+                    </li>
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">4</span>Luis Zé
+                    </li>
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">5</span>Borat
+                    </li>
+                    
+                  </ol>
+                </div>
+                <div>
+                  <h4 class="font-semibold text-gray-600 mb-3 flex items-center gap-2">
+                    <span class="w-4 h-4 rounded-full bg-gray-800 inline-block"></span>
+                    Pretos
+                    
+                    <span class="ml-1 text-lg font-bold text-emerald-600">11</span>
+                    <span class="ml-auto text-xs font-semibold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full">WIN</span>
+                    
+                    
+                  </h4>
+                  <ol class="space-y-1">
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">1</span>Shiuvaca
+                    </li>
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">2</span>Padre
+                    </li>
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">3</span>Bocesso
+                    </li>
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">4</span>Chupa
+                    </li>
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">5</span>Tronco
+                    </li>
+                    
+                  </ol>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          
+          
+          
+          <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+            <button
+              class="w-full px-6 py-4 text-left flex items-center justify-between hover:bg-gray-50 transition-colors"
+              onclick="toggleAccordion('acc-10')"
+            >
+              <span class="font-semibold text-gray-900">2025-12-15</span>
+              <div class="flex items-center gap-4 text-sm">
+                
+                <span class="font-bold text-emerald-600">⚪ 12</span>
+                <span class="text-gray-300">–</span>
+                <span class="font-bold text-gray-400">9 ⚫</span>
+                
+                <span id="acc-icon-10" class="text-gray-400 ml-2">▼</span>
+              </div>
+            </button>
+            <div id="acc-10" class="hidden border-t border-gray-100">
+              <div class="p-6 grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <div>
+                  <h4 class="font-semibold text-gray-600 mb-3 flex items-center gap-2">
+                    <span class="w-4 h-4 rounded-full bg-white border-2 border-gray-300 inline-block"></span>
+                    Brancos
+                    
+                    <span class="ml-1 text-lg font-bold text-emerald-600">12</span>
+                    <span class="ml-auto text-xs font-semibold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full">WIN</span>
+                    
+                    
+                  </h4>
+                  <ol class="space-y-1">
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">1</span>Bocesso
+                    </li>
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">2</span>Chupa
+                    </li>
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">3</span>Ritalina
+                    </li>
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">4</span>Tronco
+                    </li>
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">5</span>Luis Zé
+                    </li>
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">6</span>Aseugarb
+                    </li>
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">7</span>Shiuvaca
+                    </li>
+                    
+                  </ol>
+                </div>
+                <div>
+                  <h4 class="font-semibold text-gray-600 mb-3 flex items-center gap-2">
+                    <span class="w-4 h-4 rounded-full bg-gray-800 inline-block"></span>
+                    Pretos
+                    
+                    <span class="ml-1 text-lg font-bold text-gray-400">9</span>
+                    <span class="ml-auto text-xs text-gray-400">LOSS</span>
+                    
+                  </h4>
+                  <ol class="space-y-1">
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">1</span>Bulldozer
+                    </li>
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">2</span>Ramiro
+                    </li>
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">3</span>Misto
+                    </li>
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">4</span>Ambrosio
+                    </li>
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">5</span>Borat
+                    </li>
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">6</span>Rodizio
+                    </li>
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">7</span>Padre
+                    </li>
+                    
+                  </ol>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          
+          
+          
+          <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+            <button
+              class="w-full px-6 py-4 text-left flex items-center justify-between hover:bg-gray-50 transition-colors"
+              onclick="toggleAccordion('acc-11')"
+            >
+              <span class="font-semibold text-gray-900">2025-12-08</span>
+              <div class="flex items-center gap-4 text-sm">
+                
+                <span class="font-bold text-gray-400">⚪ 12</span>
+                <span class="text-gray-300">–</span>
+                <span class="font-bold text-emerald-600">13 ⚫</span>
+                
+                <span id="acc-icon-11" class="text-gray-400 ml-2">▼</span>
+              </div>
+            </button>
+            <div id="acc-11" class="hidden border-t border-gray-100">
+              <div class="p-6 grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <div>
+                  <h4 class="font-semibold text-gray-600 mb-3 flex items-center gap-2">
+                    <span class="w-4 h-4 rounded-full bg-white border-2 border-gray-300 inline-block"></span>
+                    Brancos
+                    
+                    <span class="ml-1 text-lg font-bold text-gray-400">12</span>
+                    <span class="ml-auto text-xs text-gray-400">LOSS</span>
+                    
+                  </h4>
+                  <ol class="space-y-1">
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">1</span>Chupa
+                    </li>
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">2</span>Padre
+                    </li>
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">3</span>Tronco
+                    </li>
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">4</span>Aseugarb
+                    </li>
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">5</span>Luis Zé
+                    </li>
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">6</span>Misto
+                    </li>
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">7</span>Mor
+                    </li>
+                    
+                  </ol>
+                </div>
+                <div>
+                  <h4 class="font-semibold text-gray-600 mb-3 flex items-center gap-2">
+                    <span class="w-4 h-4 rounded-full bg-gray-800 inline-block"></span>
+                    Pretos
+                    
+                    <span class="ml-1 text-lg font-bold text-emerald-600">13</span>
+                    <span class="ml-auto text-xs font-semibold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full">WIN</span>
+                    
+                    
+                  </h4>
+                  <ol class="space-y-1">
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">1</span>Revelvesvas
+                    </li>
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">2</span>Shiuvaca
+                    </li>
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">3</span>Borat
+                    </li>
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">4</span>Ritalina
+                    </li>
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">5</span>Pusse
+                    </li>
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">6</span>Remora
+                    </li>
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">7</span>Nuku
+                    </li>
+                    
+                  </ol>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          
+          
+          
+          <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+            <button
+              class="w-full px-6 py-4 text-left flex items-center justify-between hover:bg-gray-50 transition-colors"
+              onclick="toggleAccordion('acc-12')"
+            >
+              <span class="font-semibold text-gray-900">2025-11-17</span>
+              <div class="flex items-center gap-4 text-sm">
+                
+                <span class="text-gray-400 text-xs">no score</span>
+                
+                <span id="acc-icon-12" class="text-gray-400 ml-2">▼</span>
+              </div>
+            </button>
+            <div id="acc-12" class="hidden border-t border-gray-100">
+              <div class="p-6 grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <div>
+                  <h4 class="font-semibold text-gray-600 mb-3 flex items-center gap-2">
+                    <span class="w-4 h-4 rounded-full bg-white border-2 border-gray-300 inline-block"></span>
+                    Brancos
+                    
+                  </h4>
+                  <ol class="space-y-1">
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">1</span>Tronco
+                    </li>
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">2</span>Shiuvaca
+                    </li>
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">3</span>Chupa
+                    </li>
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">4</span>Remora
+                    </li>
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">5</span>Revelvesvas
+                    </li>
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">6</span>Mor
+                    </li>
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">7</span>Salto
+                    </li>
+                    
+                  </ol>
+                </div>
+                <div>
+                  <h4 class="font-semibold text-gray-600 mb-3 flex items-center gap-2">
+                    <span class="w-4 h-4 rounded-full bg-gray-800 inline-block"></span>
+                    Pretos
+                    
+                  </h4>
+                  <ol class="space-y-1">
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">1</span>Pés de Sapo
+                    </li>
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">2</span>Luis Zé
+                    </li>
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">3</span>Ritalina
+                    </li>
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">4</span>Borat
+                    </li>
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">5</span>Pusse
+                    </li>
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">6</span>Padre
+                    </li>
+                    
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">7</span>Misto
+                    </li>
+                    
+                  </ol>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+        </div>
+        
+      </div>
+
+    </div>
+  </main>
+
+  <script>
+    function showTab(name, btn) {
+      document.querySelectorAll('.tab-pane').forEach(p => p.classList.add('hidden'));
+      document.querySelectorAll('.tab-btn').forEach(b => {
+        b.classList.remove('border-emerald-500', 'text-emerald-600');
+        b.classList.add('border-transparent', 'text-gray-500');
+      });
+      document.getElementById('tab-' + name).classList.remove('hidden');
+      btn.classList.remove('border-transparent', 'text-gray-500');
+      btn.classList.add('border-emerald-500', 'text-emerald-600');
+      if (name === 'charts') renderCharts();
+      if (name === 'leaderboard') renderLeaderboard();
+    }
+
+    function toggleAccordion(id) {
+      const el = document.getElementById(id);
+      const idx = id.replace('acc-', '');
+      const icon = document.getElementById('acc-icon-' + idx);
+      el.classList.toggle('hidden');
+      icon.textContent = el.classList.contains('hidden') ? '▼' : '▲';
+    }
+
+    const gamesData = [{"date": "2025-11-17", "brancos_score": 0, "pretos_score": 0, "brancos_players": ["Tronco", "Shiuvaca", "Chupa", "Remora", "Revelvesvas", "Mor", "Salto"], "pretos_players": ["P\u00e9s de Sapo", "Luis Z\u00e9", "Ritalina", "Borat", "Pusse", "Padre", "Misto"], "distance_km": "0.00", "time": "00:00:48.2", "moving_time": "00:00:00", "avg_hr": "64", "max_hr": "67", "avg_speed": "--", "calories": "1", "steps": "--"}, {"date": "2025-12-08", "brancos_score": 12, "pretos_score": 13, "brancos_players": ["Chupa", "Padre", "Tronco", "Aseugarb", "Luis Z\u00e9", "Misto", "Mor"], "pretos_players": ["Revelvesvas", "Shiuvaca", "Borat", "Ritalina", "Pusse", "Remora", "Nuku"], "distance_km": "6.44", "time": "01:39:50", "moving_time": "00:46:53", "avg_hr": "136", "max_hr": "185", "avg_speed": "3.9", "calories": "889", "steps": "7,476"}, {"date": "2025-12-15", "brancos_score": 12, "pretos_score": 9, "brancos_players": ["Bocesso", "Chupa", "Ritalina", "Tronco", "Luis Z\u00e9", "Aseugarb", "Shiuvaca"], "pretos_players": ["Bulldozer", "Ramiro", "Misto", "Ambrosio", "Borat", "Rodizio", "Padre"], "distance_km": "5.55", "time": "01:18:19", "moving_time": "00:44:26", "avg_hr": "129", "max_hr": "175", "avg_speed": "4.3", "calories": "622", "steps": "6,734"}, {"date": "2025-12-22", "brancos_score": 2, "pretos_score": 11, "brancos_players": ["Revelvesvas", "Lusco", "Aseugarb", "Luis Z\u00e9", "Borat"], "pretos_players": ["Shiuvaca", "Padre", "Bocesso", "Chupa", "Tronco"], "distance_km": "2.68", "time": "00:54:51", "moving_time": "00:21:43", "avg_hr": "129", "max_hr": "175", "avg_speed": "2.9", "calories": "456", "steps": "4,732"}, {"date": "2025-12-29", "brancos_score": 7, "pretos_score": 7, "brancos_players": ["Tronco", "Misto", "Revelvesvas", "Padre", "Nikeolino", "Bocesso", "Lusco"], "pretos_players": ["Bulldozer", "Chupa", "Aseugarb", "Salto", "Shiuvaca", "Borat", "Ramboia"], "distance_km": "4.78", "time": "01:05:36", "moving_time": "00:41:01", "avg_hr": "128", "max_hr": "173", "avg_speed": "4.4", "calories": "541", "steps": "6,032"}, {"date": "2026-01-12", "brancos_score": 9, "pretos_score": 6, "brancos_players": ["Mor", "Titi", "Lusco", "Amigo do Lusco", "Chupa", "Revelvesvas"], "pretos_players": ["Aseugarb", "Misto", "Borat", "Luis Z\u00e9", "P\u00e9s de Sapo", "Shiuvaca", "Ritalina"], "distance_km": "6.90", "time": "01:24:13", "moving_time": "00:56:29", "avg_hr": "140", "max_hr": "187", "avg_speed": "4.9", "calories": "784", "steps": "8,362"}, {"date": "2026-01-19", "brancos_score": 12, "pretos_score": 13, "brancos_players": ["Chupa", "Ramiro", "Misto", "Padre", "Aseugarb", "Luis Z\u00e9", "Remora"], "pretos_players": ["Borat", "Mor", "Shiuvaca", "P\u00e9s de Sapo", "Revelvesvas", "Salto", "Komossos"], "distance_km": "4.65", "time": "01:08:42", "moving_time": "00:37:39", "avg_hr": "122", "max_hr": "179", "avg_speed": "4.1", "calories": "469", "steps": "5,820"}, {"date": "2026-03-16", "brancos_score": 3, "pretos_score": 9, "brancos_players": ["Mor", "Luis Z\u00e9", "Misto", "Padre", "Shiuvaca", "Revelvesvas"], "pretos_players": ["Komossos", "Salto", "Ritalina", "Bocesso", "Tronco", "P\u00e9s de Sapo"], "distance_km": "1.30", "time": "00:50:17", "moving_time": "00:11:36", "avg_hr": "136", "max_hr": "174", "avg_speed": "1.6", "calories": "481", "steps": "4,304"}, {"date": "2026-03-23", "brancos_score": 8, "pretos_score": 10, "brancos_players": ["Luis Z\u00e9", "Amigo do Lusco", "Mor", "Misto", "Pusse", "Tronco", "Padre"], "pretos_players": ["Revelvesvas", "Salto", "Lusco", "Bocesso", "Chupa", "Shiuvaca", "Chibata"], "distance_km": "5.47", "time": "01:02:46", "moving_time": "00:42:36", "avg_hr": "132", "max_hr": "181", "avg_speed": "5.2", "calories": "587", "steps": "6,254"}, {"date": "2026-04-06", "brancos_score": 4, "pretos_score": 7, "brancos_players": ["Luis Z\u00e9", "Revelvesvas", "Padre", "Mor", "Shiuvaca"], "pretos_players": ["Nikeolino", "Tronco", "Bocesso", "Misto", "Lusco"], "distance_km": "1.51", "time": "00:56:27", "moving_time": "00:13:16", "avg_hr": "139", "max_hr": "176", "avg_speed": "1.6", "calories": "548", "steps": "4,470"}, {"date": "2026-04-13", "brancos_score": 10, "pretos_score": 11, "brancos_players": ["Chupa", "Amigo do Salto", "Aseugarb", "Revelvesvas", "Mor", "Remora", "Tronco"], "pretos_players": ["Salto", "Bocesso", "Luis Z\u00e9", "Shiuvaca", "Misto", "Padre", "Komossos"], "distance_km": "6.93", "time": "01:21:13", "moving_time": "00:52:56", "avg_hr": "136", "max_hr": "196", "avg_speed": "5.1", "calories": "775", "steps": "8,068"}, {"date": "2026-04-20", "brancos_score": 8, "pretos_score": 8, "brancos_players": ["Luis Z\u00e9", "Misto", "Revelvesvas", "Amigo Nuno", "Shiuvaca", "Nikeolino", "Remora"], "pretos_players": ["Padre", "Ze tolo", "Barbs", "Felix", "Premium", "Chupa", "Paulo"], "distance_km": "4.84", "time": "01:04:40", "moving_time": "00:38:03", "avg_hr": "135", "max_hr": "181", "avg_speed": "4.5", "calories": "592", "steps": "5,738"}];
+    const lbData = [{"player": "Komossos", "played": 3, "wins": 3, "draws": 0, "losses": 0, "win_rate": 100}, {"player": "Bocesso", "played": 7, "wins": 6, "draws": 1, "losses": 0, "win_rate": 86}, {"player": "Salto", "played": 6, "wins": 4, "draws": 2, "losses": 0, "win_rate": 67}, {"player": "Ritalina", "played": 5, "wins": 3, "draws": 1, "losses": 1, "win_rate": 60}, {"player": "Lusco", "played": 5, "wins": 3, "draws": 1, "losses": 1, "win_rate": 60}, {"player": "Shiuvaca", "played": 12, "wins": 6, "draws": 3, "losses": 3, "win_rate": 50}, {"player": "P\u00e9s de Sapo", "played": 4, "wins": 2, "draws": 1, "losses": 1, "win_rate": 50}, {"player": "Tronco", "played": 9, "wins": 4, "draws": 2, "losses": 3, "win_rate": 44}, {"player": "Chupa", "played": 10, "wins": 4, "draws": 3, "losses": 3, "win_rate": 40}, {"player": "Revelvesvas", "played": 11, "wins": 4, "draws": 3, "losses": 4, "win_rate": 36}, {"player": "Pusse", "played": 3, "wins": 1, "draws": 1, "losses": 1, "win_rate": 33}, {"player": "Nikeolino", "played": 3, "wins": 1, "draws": 2, "losses": 0, "win_rate": 33}, {"player": "Borat", "played": 7, "wins": 2, "draws": 2, "losses": 3, "win_rate": 29}, {"player": "Mor", "played": 8, "wins": 2, "draws": 1, "losses": 5, "win_rate": 25}, {"player": "Remora", "played": 5, "wins": 1, "draws": 2, "losses": 2, "win_rate": 20}, {"player": "Luis Z\u00e9", "played": 11, "wins": 2, "draws": 2, "losses": 7, "win_rate": 18}, {"player": "Padre", "played": 11, "wins": 2, "draws": 3, "losses": 6, "win_rate": 18}, {"player": "Misto", "played": 11, "wins": 2, "draws": 3, "losses": 6, "win_rate": 18}, {"player": "Aseugarb", "played": 7, "wins": 1, "draws": 1, "losses": 5, "win_rate": 14}];
+
+    const gameLabels = gamesData.map(g => g.date);
+    const distances = gamesData.map(g => parseFloat(g.distance_km) || null);
+    const avgHRs = gamesData.map(g => parseInt(g.avg_hr) || null);
+    const maxHRs = gamesData.map(g => parseInt(g.max_hr) || null);
+    const calories = gamesData.map(g => parseInt(g.calories) || null);
+    const brancosScores = gamesData.map(g => g.brancos_score || null);
+    const pretosScores = gamesData.map(g => g.pretos_score || null);
+
+    const baseOpts = {
+      responsive: true,
+      plugins: { legend: { display: false } },
+      scales: { x: { ticks: { maxRotation: 45, font: { size: 10 } } }, y: { beginAtZero: false } }
+    };
+
+    let chartsRendered = false;
+    function renderCharts() {
+      if (chartsRendered) return;
+      chartsRendered = true;
+
+      new Chart(document.getElementById('chartDistance'), {
+        type: 'line',
+        data: { labels: gameLabels, datasets: [{ data: distances, borderColor: '#10b981', backgroundColor: 'rgba(16,185,129,0.1)', fill: true, tension: 0.3, pointRadius: 4, spanGaps: true }] },
+        options: baseOpts,
+      });
+
+      new Chart(document.getElementById('chartHR'), {
+        type: 'line',
+        data: { labels: gameLabels, datasets: [
+          { label: 'Avg HR', data: avgHRs, borderColor: '#f59e0b', backgroundColor: 'rgba(245,158,11,0.1)', fill: true, tension: 0.3, pointRadius: 4, spanGaps: true },
+          { label: 'Max HR', data: maxHRs, borderColor: '#ef4444', borderDash: [4,4], fill: false, tension: 0.3, pointRadius: 3, spanGaps: true },
+        ]},
+        options: { ...baseOpts, plugins: { legend: { display: true, position: 'top' } } },
+      });
+
+      new Chart(document.getElementById('chartCalories'), {
+        type: 'bar',
+        data: { labels: gameLabels, datasets: [{ data: calories, backgroundColor: 'rgba(139,92,246,0.7)', borderRadius: 4 }] },
+        options: baseOpts,
+      });
+
+      new Chart(document.getElementById('chartScores'), {
+        type: 'bar',
+        data: { labels: gameLabels, datasets: [
+          { label: 'Brancos', data: brancosScores, backgroundColor: 'rgba(229,231,235,0.9)', borderRadius: 4 },
+          { label: 'Pretos',  data: pretosScores,  backgroundColor: 'rgba(31,41,55,0.8)',    borderRadius: 4 },
+        ]},
+        options: { ...baseOpts, plugins: { legend: { display: true, position: 'top' } }, scales: { ...baseOpts.scales, y: { beginAtZero: true } } },
+      });
+    }
+
+    let lbRendered = false;
+    function renderLeaderboard() {
+      if (lbRendered || !lbData.length) return;
+      lbRendered = true;
+
+      const colors = lbData.map(e =>
+        e.win_rate >= 60 ? 'rgba(16,185,129,0.8)' :
+        e.win_rate >= 40 ? 'rgba(245,158,11,0.8)' :
+                           'rgba(239,68,68,0.7)'
+      );
+
+      new Chart(document.getElementById('chartLeaderboard'), {
+        type: 'bar',
+        data: {
+          labels: lbData.map(e => e.player),
+          datasets: [{
+            label: 'Win %',
+            data: lbData.map(e => e.win_rate),
+            backgroundColor: colors,
+            borderRadius: 4,
+          }]
+        },
+        options: {
+          indexAxis: 'y',
+          responsive: true,
+          plugins: { legend: { display: false } },
+          scales: { x: { beginAtZero: true, max: 100, ticks: { callback: v => v + '%' } } }
+        }
+      });
+    }
+
+    // Render leaderboard on load (it's the default tab)
+    renderLeaderboard();
+  </script>
+</body>
+</html>

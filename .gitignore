@@ -14,6 +14,8 @@ uv.lock
 
 # Data — raw exports may contain personal data, keep out of git by default
 data/raw/
+# Processed data is safe to commit (anonymised game results)
+# data/processed/ is intentionally tracked
 
 # Secrets
 .env
