@@ -230,6 +230,11 @@ def _parse_message_dicts(messages: list[dict[str, Any]]) -> list[TeamSelection]:
             continue
 
         brancos, pretos = teams
+        if len(brancos.players) != len(pretos.players):
+            warnings.warn(
+                f"{monday}: uneven teams — brancos {len(brancos.players)} vs pretos {len(pretos.players)}.",
+                stacklevel=2,
+            )
         selections.append(TeamSelection(game_date=monday, brancos=brancos, pretos=pretos))
 
     return selections
