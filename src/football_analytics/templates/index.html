@@ -13,9 +13,17 @@
   <header class="bg-emerald-700 text-white shadow-lg">
     <div class="max-w-7xl mx-auto px-6 py-5 flex items-center gap-4">
       <span class="text-3xl">⚽</span>
-      <div>
+      <div class="flex-1">
         <h1 class="text-2xl font-bold tracking-tight">Football Analytics</h1>
         <p class="text-emerald-200 text-sm">Monday night Guimarães · Brancos vs Pretos</p>
+      </div>
+      <div class="flex items-center gap-2">
+        <button id="sync-garmin-btn" onclick="syncGarmin()" class="flex items-center gap-1.5 bg-emerald-600 hover:bg-emerald-500 border border-emerald-500 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors">
+          ⌚ Sync Garmin
+        </button>
+        <button onclick="openModal()" class="flex items-center gap-1.5 bg-white text-emerald-700 hover:bg-emerald-50 text-sm font-medium px-4 py-2 rounded-lg transition-colors">
+          + Add Game
+        </button>
       </div>
     </div>
   </header>
@@ -389,6 +397,212 @@
 
     // Render leaderboard on load (it's the default tab)
     renderLeaderboard();
+
+    // ── Add Game modal ──────────────────────────────────────────────────────
+    function openModal() {
+      document.getElementById('game-date').value = new Date().toISOString().slice(0, 10);
+      document.getElementById('modal-overlay').classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+      pastedImageFile = null;
+    }
+
+    function closeModal() {
+      document.getElementById('modal-overlay').classList.add('hidden');
+      document.body.style.overflow = '';
+      document.getElementById('add-game-form').reset();
+      document.getElementById('form-status').classList.add('hidden');
+      document.getElementById('image-filename').classList.add('hidden');
+      pastedImageFile = null;
+      setInputMode('text');
+    }
+
+    function setInputMode(mode) {
+      const isText = mode === 'text';
+      document.getElementById('input-text').classList.toggle('hidden', !isText);
+      document.getElementById('input-image').classList.toggle('hidden', isText);
+      const active = 'px-3 py-1.5 text-xs font-medium rounded-lg transition-colors bg-emerald-500 text-white';
+      const inactive = 'px-3 py-1.5 text-xs font-medium rounded-lg transition-colors bg-gray-100 text-gray-600 hover:bg-gray-200';
+      document.getElementById('btn-text').className = isText ? active : inactive;
+      document.getElementById('btn-image').className = !isText ? active : inactive;
+    }
+
+    function showFilename(input) {
+      const el = document.getElementById('image-filename');
+      if (input.files.length > 0) {
+        el.textContent = input.files[0].name;
+        el.classList.remove('hidden');
+      }
+    }
+
+    // Support pasting an image directly into the text area
+    let pastedImageFile = null;
+    document.getElementById('game-text').addEventListener('paste', (e) => {
+      const items = e.clipboardData?.items;
+      if (!items) return;
+      for (const item of items) {
+        if (item.type.startsWith('image/')) {
+          e.preventDefault();
+          pastedImageFile = item.getAsFile();
+          setInputMode('image');
+          const el = document.getElementById('image-filename');
+          el.textContent = 'Pasted image';
+          el.classList.remove('hidden');
+          break;
+        }
+      }
+    });
+
+    async function submitGame() {
+      const btn = document.getElementById('submit-btn');
+      const status = document.getElementById('form-status');
+      btn.disabled = true;
+      btn.textContent = 'Saving…';
+      status.classList.add('hidden');
+
+      const fd = new FormData();
+      fd.append('date', document.getElementById('game-date').value);
+
+      const textHidden = document.getElementById('input-text').classList.contains('hidden');
+      const imageInput = document.getElementById('game-image');
+      if (!textHidden) {
+        fd.append('text', document.getElementById('game-text').value);
+      } else if (pastedImageFile) {
+        fd.append('image', pastedImageFile, 'pasted.jpg');
+      } else if (imageInput.files.length > 0) {
+        fd.append('image', imageInput.files[0]);
+      }
+
+      const bScore = document.getElementById('brancos-score').value;
+      const pScore = document.getElementById('pretos-score').value;
+      if (bScore !== '') fd.append('brancos_score', bScore);
+      if (pScore !== '') fd.append('pretos_score', pScore);
+
+      try {
+        const res = await fetch('/games', { method: 'POST', body: fd });
+        const data = await res.json();
+        if (res.ok) {
+          status.textContent = `✓ Game ${data.action}: ${data.brancos.length} Brancos, ${data.pretos.length} Pretos`;
+          status.className = 'text-sm rounded-lg px-3 py-2 bg-emerald-50 text-emerald-700';
+          status.classList.remove('hidden');
+          setTimeout(() => { closeModal(); location.reload(); }, 1500);
+        } else {
+          status.textContent = `Error: ${data.detail || 'Unknown error'}`;
+          status.className = 'text-sm rounded-lg px-3 py-2 bg-red-50 text-red-700';
+          status.classList.remove('hidden');
+        }
+      } catch (err) {
+        status.textContent = `Network error: ${err.message}`;
+        status.className = 'text-sm rounded-lg px-3 py-2 bg-red-50 text-red-700';
+        status.classList.remove('hidden');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Save Game';
+      }
+    }
+
+    async function syncGarmin() {
+      const btn = document.getElementById('sync-garmin-btn');
+      btn.disabled = true;
+      btn.textContent = '⌚ Syncing…';
+      try {
+        const res = await fetch('/games/sync-garmin', { method: 'POST' });
+        const data = await res.json();
+        if (res.ok) {
+          if (data.updated > 0) {
+            alert(`Garmin sync done: updated ${data.updated}/${data.total} games.`);
+            location.reload();
+          } else {
+            alert('Garmin sync done: no new scores found.');
+          }
+        } else {
+          alert(`Garmin sync error: ${data.detail || 'Unknown error'}`);
+        }
+      } catch (err) {
+        alert(`Network error: ${err.message}`);
+      } finally {
+        btn.disabled = false;
+        btn.textContent = '⌚ Sync Garmin';
+      }
+    }
   </script>
+
+  <!-- Add Game modal -->
+  <div id="modal-overlay" class="fixed inset-0 bg-black/50 z-50 hidden flex items-center justify-center p-4" onclick="if(event.target===this)closeModal()">
+    <div class="bg-white rounded-2xl shadow-xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
+      <div class="px-6 py-5 border-b border-gray-100 flex items-center justify-between">
+        <h2 class="text-lg font-bold text-gray-900">Add New Game</h2>
+        <button onclick="closeModal()" class="text-gray-400 hover:text-gray-600 text-2xl leading-none">&times;</button>
+      </div>
+      <form id="add-game-form" class="px-6 py-5 space-y-5" onsubmit="return false">
+
+        <!-- Date -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Game date</label>
+          <input type="date" id="game-date" name="date"
+            class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-400" />
+        </div>
+
+        <!-- Input mode toggle -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">Team lineup</label>
+          <div class="flex gap-2 mb-3">
+            <button type="button" id="btn-text" onclick="setInputMode('text')"
+              class="px-3 py-1.5 text-xs font-medium rounded-lg transition-colors bg-emerald-500 text-white">Paste text</button>
+            <button type="button" id="btn-image" onclick="setInputMode('image')"
+              class="px-3 py-1.5 text-xs font-medium rounded-lg transition-colors bg-gray-100 text-gray-600 hover:bg-gray-200">Upload image</button>
+          </div>
+
+          <!-- Text input -->
+          <div id="input-text">
+            <textarea id="game-text" rows="9"
+              placeholder="Brancos: Alice, Bob, Charlie&#10;Pretos: Dave, Eve, Frank&#10;&#10;or block format:&#10;Brancos&#10;1 Alice&#10;2 Bob"
+              class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-emerald-400 resize-y"></textarea>
+            <p class="text-xs text-gray-400 mt-1">Tip: paste a screenshot here (Ctrl+V / Cmd+V) to use OCR.</p>
+          </div>
+
+          <!-- Image input -->
+          <div id="input-image" class="hidden">
+            <label for="game-image"
+              class="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors">
+              <span class="text-3xl mb-1">📷</span>
+              <span class="text-sm text-gray-500">Click to choose or drag &amp; drop</span>
+              <span id="image-filename" class="text-xs text-emerald-600 mt-1 hidden"></span>
+            </label>
+            <input type="file" id="game-image" accept="image/*" class="hidden" onchange="showFilename(this)" />
+          </div>
+        </div>
+
+        <!-- Optional score -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">Score <span class="text-gray-400 font-normal">(optional)</span></label>
+          <div class="flex items-end gap-3">
+            <div class="flex-1 text-center">
+              <p class="text-xs text-gray-500 mb-1">Brancos ⚪</p>
+              <input type="number" id="brancos-score" min="0" max="99" placeholder="—"
+                class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm text-center focus:outline-none focus:ring-2 focus:ring-emerald-400" />
+            </div>
+            <span class="text-gray-400 font-bold pb-2">–</span>
+            <div class="flex-1 text-center">
+              <p class="text-xs text-gray-500 mb-1">Pretos ⚫</p>
+              <input type="number" id="pretos-score" min="0" max="99" placeholder="—"
+                class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm text-center focus:outline-none focus:ring-2 focus:ring-emerald-400" />
+            </div>
+          </div>
+        </div>
+
+        <!-- Status -->
+        <div id="form-status" class="hidden text-sm rounded-lg px-3 py-2"></div>
+
+        <!-- Actions -->
+        <div class="flex gap-3 pt-1">
+          <button type="button" onclick="closeModal()"
+            class="flex-1 border border-gray-200 text-gray-600 rounded-lg px-4 py-2.5 text-sm font-medium hover:bg-gray-50 transition-colors">Cancel</button>
+          <button type="button" onclick="submitGame()" id="submit-btn"
+            class="flex-1 bg-emerald-500 hover:bg-emerald-600 text-white rounded-lg px-4 py-2.5 text-sm font-medium transition-colors">Save Game</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
 </body>
 </html>
