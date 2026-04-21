@@ -23,6 +23,19 @@ This file explains how AI agents (e.g. Claude Code) should operate within this p
 | `scripts/` | One-off helper scripts and the seed example. |
 | `context/` | Human + agent context docs (this folder). |
 
+## Game domain rules
+
+- Games are played every **Monday at 20h PT**.
+- Teams are decided any time from **3 days before up to kick-off**; multiple drafts are posted — only the **last valid team message before 20h Monday** counts.
+- Teams are always **brancos** (first list) and **pretos** (second list). Labels may be absent — position determines the assignment.
+- Team selections arrive as either:
+  - A **text message** with two ordered player lists.
+  - An **image** (simple screenshot) — use OCR (pytesseract) to extract text, then parse as above.
+- **Game type** (5-a-side, 6-a-side, 7-a-side) is auto-detected from player count per team.
+- The user's alias in the chat is **"Padre" / "Padreco"** (and close variants) — used to identify `my_team`.
+- Teams may **not be detected** for a given week (no message found, OCR failure, etc.) — raise a descriptive issue/warning and continue. Manual game entry will be supported in future.
+- Chat source: **Facebook Messenger JSON export**.
+
 ## Key TODOs for agents picking up this project
 
 1. **Implement `parse_garmin_export`** in `parsers/garmin.py` — needs the actual Garmin export format.

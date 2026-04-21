@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Football Analytics</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+</head>
+<body class="bg-gray-50 min-h-screen font-sans">
+
+  <!-- Header -->
+  <header class="bg-emerald-700 text-white shadow-lg">
+    <div class="max-w-7xl mx-auto px-6 py-5 flex items-center gap-4">
+      <span class="text-3xl">⚽</span>
+      <div>
+        <h1 class="text-2xl font-bold tracking-tight">Football Analytics</h1>
+        <p class="text-emerald-200 text-sm">Monday night Guimarães · Brancos vs Pretos</p>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto px-6 py-8 space-y-8">
+
+    <!-- Stats Cards -->
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
+      <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 flex items-center gap-4">
+        <div class="bg-emerald-100 rounded-full p-3 text-2xl">🏟️</div>
+        <div>
+          <p class="text-3xl font-bold text-gray-900">{{ total_games }}</p>
+          <p class="text-sm text-gray-500">Games played</p>
+        </div>
+      </div>
+      <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 flex items-center gap-4">
+        <div class="bg-blue-100 rounded-full p-3 text-2xl">👥</div>
+        <div>
+          <p class="text-3xl font-bold text-gray-900">{{ total_players }}</p>
+          <p class="text-sm text-gray-500">Tracked players</p>
+        </div>
+      </div>
+      <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 flex items-center gap-4">
+        <div class="bg-amber-100 rounded-full p-3 text-2xl">📅</div>
+        <div>
+          <p class="text-xl font-bold text-gray-900">{{ latest_game }}</p>
+          <p class="text-sm text-gray-500">Latest game</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tabs -->
+    <div>
+      <div class="flex gap-1 border-b border-gray-200 mb-6" id="tabs">
+        <button class="tab-btn px-4 py-2 text-sm font-medium rounded-t-lg border-b-2 border-emerald-500 text-emerald-600 transition-colors" onclick="showTab('leaderboard', this)">Leaderboard</button>
+        <button class="tab-btn px-4 py-2 text-sm font-medium rounded-t-lg border-b-2 border-transparent text-gray-500 hover:text-gray-700 transition-colors" onclick="showTab('games', this)">Game History</button>
+        <button class="tab-btn px-4 py-2 text-sm font-medium rounded-t-lg border-b-2 border-transparent text-gray-500 hover:text-gray-700 transition-colors" onclick="showTab('charts', this)">Charts</button>
+        <button class="tab-btn px-4 py-2 text-sm font-medium rounded-t-lg border-b-2 border-transparent text-gray-500 hover:text-gray-700 transition-colors" onclick="showTab('teams', this)">Teams</button>
+      </div>
+
+      <!-- Tab: Leaderboard -->
+      <div id="tab-leaderboard" class="tab-pane">
+        {% if leaderboard %}
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+          <div class="overflow-x-auto">
+            <table class="w-full text-sm">
+              <thead class="bg-gray-50 text-gray-500 uppercase text-xs tracking-wider">
+                <tr>
+                  <th class="px-4 py-3 text-left w-8">#</th>
+                  <th class="px-4 py-3 text-left">Player</th>
+                  <th class="px-4 py-3 text-center">Played</th>
+                  <th class="px-4 py-3 text-center text-emerald-600">W</th>
+                  <th class="px-4 py-3 text-center text-amber-500">D</th>
+                  <th class="px-4 py-3 text-center text-red-500">L</th>
+                  <th class="px-4 py-3 text-left">Win %</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-gray-50">
+                {% for entry in leaderboard %}
+                <tr class="hover:bg-gray-50 transition-colors">
+                  <td class="px-4 py-3 text-gray-400 font-medium text-xs">
+                    {% if loop.index == 1 %}🥇
+                    {% elif loop.index == 2 %}🥈
+                    {% elif loop.index == 3 %}🥉
+                    {% else %}{{ loop.index }}{% endif %}
+                  </td>
+                  <td class="px-4 py-3 font-semibold text-gray-900">{{ entry.player }}</td>
+                  <td class="px-4 py-3 text-center text-gray-600">{{ entry.played }}</td>
+                  <td class="px-4 py-3 text-center font-bold text-emerald-600">{{ entry.wins }}</td>
+                  <td class="px-4 py-3 text-center font-medium text-amber-500">{{ entry.draws }}</td>
+                  <td class="px-4 py-3 text-center text-red-400">{{ entry.losses }}</td>
+                  <td class="px-4 py-3">
+                    <div class="flex items-center gap-2">
+                      <div class="flex-1 bg-gray-100 rounded-full h-2 min-w-16">
+                        <div class="h-2 rounded-full {% if entry.win_rate >= 60 %}bg-emerald-500{% elif entry.win_rate >= 40 %}bg-amber-400{% else %}bg-red-400{% endif %}"
+                             style="width: {{ entry.win_rate }}%"></div>
+                      </div>
+                      <span class="text-xs font-semibold text-gray-600 w-8 text-right">{{ entry.win_rate }}%</span>
+                    </div>
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="mt-6 bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+          <h3 class="font-semibold text-gray-700 mb-4">Win rate by player</h3>
+          <canvas id="chartLeaderboard"></canvas>
+        </div>
+        {% else %}
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 px-6 py-12 text-center text-gray-400">
+          No player data found. Make sure <code class="bg-gray-100 px-1 rounded">data/processed/games.json</code> exists with scores.
+        </div>
+        {% endif %}
+      </div>
+
+      <!-- Tab: Games History -->
+      <div id="tab-games" class="tab-pane hidden">
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+          {% if games %}
+          <div class="overflow-x-auto">
+            <table class="w-full text-sm">
+              <thead class="bg-gray-50 text-gray-500 uppercase text-xs tracking-wider">
+                <tr>
+                  <th class="px-4 py-3 text-left">Date</th>
+                  <th class="px-4 py-3 text-center">Score</th>
+                  <th class="px-4 py-3 text-center">Result</th>
+                  <th class="px-4 py-3 text-right">Distance</th>
+                  <th class="px-4 py-3 text-right">Duration</th>
+                  <th class="px-4 py-3 text-right">Avg HR</th>
+                  <th class="px-4 py-3 text-right">Calories</th>
+                  <th class="px-4 py-3 text-right">Avg Speed</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-gray-50">
+                {% for g in games | reverse %}
+                {% set bs = g.brancos_score %}
+                {% set ps = g.pretos_score %}
+                {% set has_score = (bs > 0 or ps > 0) %}
+                <tr class="hover:bg-gray-50 transition-colors">
+                  <td class="px-4 py-3 font-medium text-gray-900">{{ g.date }}</td>
+                  <td class="px-4 py-3 text-center">
+                    {% if has_score %}
+                    <span class="font-bold {% if bs > ps %}text-white bg-emerald-500{% elif ps > bs %}text-gray-400{% else %}text-amber-600 bg-amber-50{% endif %} px-2 py-0.5 rounded text-xs">{{ bs }}</span>
+                    <span class="text-gray-400 mx-1">–</span>
+                    <span class="font-bold {% if ps > bs %}text-white bg-emerald-500{% elif bs > ps %}text-gray-400{% else %}text-amber-600 bg-amber-50{% endif %} px-2 py-0.5 rounded text-xs">{{ ps }}</span>
+                    {% else %}
+                    <span class="text-gray-300">—</span>
+                    {% endif %}
+                  </td>
+                  <td class="px-4 py-3 text-center text-xs font-medium">
+                    {% if has_score %}
+                      {% if bs > ps %}<span class="text-white bg-emerald-500 px-2 py-0.5 rounded-full">Brancos</span>
+                      {% elif ps > bs %}<span class="text-white bg-gray-700 px-2 py-0.5 rounded-full">Pretos</span>
+                      {% else %}<span class="text-amber-600 bg-amber-50 px-2 py-0.5 rounded-full">Draw</span>
+                      {% endif %}
+                    {% endif %}
+                  </td>
+                  <td class="px-4 py-3 text-right text-gray-700">{% if g.distance_km %}{{ g.distance_km }} km{% else %}—{% endif %}</td>
+                  <td class="px-4 py-3 text-right text-gray-700">{{ g.time or "—" }}</td>
+                  <td class="px-4 py-3 text-right">
+                    {% if g.avg_hr %}
+                    <span class="inline-flex items-center gap-1">
+                      <span class="w-2 h-2 rounded-full {% if g.avg_hr | int > 155 %}bg-red-400{% elif g.avg_hr | int > 135 %}bg-amber-400{% else %}bg-green-400{% endif %}"></span>
+                      {{ g.avg_hr }}
+                    </span>
+                    {% else %}—{% endif %}
+                  </td>
+                  <td class="px-4 py-3 text-right text-gray-700">{{ g.calories or "—" }}</td>
+                  <td class="px-4 py-3 text-right text-gray-700">{% if g.avg_speed %}{{ g.avg_speed }} km/h{% else %}—{% endif %}</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+          {% else %}
+          <div class="px-6 py-12 text-center text-gray-400">No game data found.</div>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Tab: Charts -->
+      <div id="tab-charts" class="tab-pane hidden">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+            <h3 class="font-semibold text-gray-700 mb-4">Distance per game (km)</h3>
+            <canvas id="chartDistance" height="200"></canvas>
+          </div>
+          <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+            <h3 class="font-semibold text-gray-700 mb-4">Heart rate per game (bpm)</h3>
+            <canvas id="chartHR" height="200"></canvas>
+          </div>
+          <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+            <h3 class="font-semibold text-gray-700 mb-4">Calories per game</h3>
+            <canvas id="chartCalories" height="200"></canvas>
+          </div>
+          <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+            <h3 class="font-semibold text-gray-700 mb-4">Scores per game</h3>
+            <canvas id="chartScores" height="200"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab: Teams -->
+      <div id="tab-teams" class="tab-pane hidden">
+        {% if games %}
+        <div class="space-y-4">
+          {% for g in games | reverse %}
+          {% set bs = g.brancos_score %}
+          {% set ps = g.pretos_score %}
+          {% set has_score = (bs > 0 or ps > 0) %}
+          <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+            <button
+              class="w-full px-6 py-4 text-left flex items-center justify-between hover:bg-gray-50 transition-colors"
+              onclick="toggleAccordion('acc-{{ loop.index }}')"
+            >
+              <span class="font-semibold text-gray-900">{{ g.date }}</span>
+              <div class="flex items-center gap-4 text-sm">
+                {% if has_score %}
+                <span class="font-bold {% if bs > ps %}text-emerald-600{% elif bs == ps %}text-amber-500{% else %}text-gray-400{% endif %}">⚪ {{ bs }}</span>
+                <span class="text-gray-300">–</span>
+                <span class="font-bold {% if ps > bs %}text-emerald-600{% elif bs == ps %}text-amber-500{% else %}text-gray-400{% endif %}">{{ ps }} ⚫</span>
+                {% else %}
+                <span class="text-gray-400 text-xs">no score</span>
+                {% endif %}
+                <span id="acc-icon-{{ loop.index }}" class="text-gray-400 ml-2">▼</span>
+              </div>
+            </button>
+            <div id="acc-{{ loop.index }}" class="hidden border-t border-gray-100">
+              <div class="p-6 grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <div>
+                  <h4 class="font-semibold text-gray-600 mb-3 flex items-center gap-2">
+                    <span class="w-4 h-4 rounded-full bg-white border-2 border-gray-300 inline-block"></span>
+                    Brancos
+                    {% if has_score %}
+                    <span class="ml-1 text-lg font-bold {% if bs > ps %}text-emerald-600{% elif bs == ps %}text-amber-500{% else %}text-gray-400{% endif %}">{{ bs }}</span>
+                    {% if bs > ps %}<span class="ml-auto text-xs font-semibold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full">WIN</span>
+                    {% elif bs == ps %}<span class="ml-auto text-xs font-semibold text-amber-500 bg-amber-50 px-2 py-0.5 rounded-full">DRAW</span>
+                    {% else %}<span class="ml-auto text-xs text-gray-400">LOSS</span>{% endif %}
+                    {% endif %}
+                  </h4>
+                  <ol class="space-y-1">
+                    {% for p in g.brancos_players %}
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">{{ loop.index }}</span>{{ p }}
+                    </li>
+                    {% endfor %}
+                  </ol>
+                </div>
+                <div>
+                  <h4 class="font-semibold text-gray-600 mb-3 flex items-center gap-2">
+                    <span class="w-4 h-4 rounded-full bg-gray-800 inline-block"></span>
+                    Pretos
+                    {% if has_score %}
+                    <span class="ml-1 text-lg font-bold {% if ps > bs %}text-emerald-600{% elif bs == ps %}text-amber-500{% else %}text-gray-400{% endif %}">{{ ps }}</span>
+                    {% if ps > bs %}<span class="ml-auto text-xs font-semibold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full">WIN</span>
+                    {% elif bs == ps %}<span class="ml-auto text-xs font-semibold text-amber-500 bg-amber-50 px-2 py-0.5 rounded-full">DRAW</span>
+                    {% else %}<span class="ml-auto text-xs text-gray-400">LOSS</span>{% endif %}
+                    {% endif %}
+                  </h4>
+                  <ol class="space-y-1">
+                    {% for p in g.pretos_players %}
+                    <li class="text-sm text-gray-700 flex items-center gap-2">
+                      <span class="w-5 text-center text-gray-400 text-xs">{{ loop.index }}</span>{{ p }}
+                    </li>
+                    {% endfor %}
+                  </ol>
+                </div>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+        {% else %}
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 px-6 py-12 text-center text-gray-400">
+          No team data found.
+        </div>
+        {% endif %}
+      </div>
+
+    </div>
+  </main>
+
+  <script>
+    function showTab(name, btn) {
+      document.querySelectorAll('.tab-pane').forEach(p => p.classList.add('hidden'));
+      document.querySelectorAll('.tab-btn').forEach(b => {
+        b.classList.remove('border-emerald-500', 'text-emerald-600');
+        b.classList.add('border-transparent', 'text-gray-500');
+      });
+      document.getElementById('tab-' + name).classList.remove('hidden');
+      btn.classList.remove('border-transparent', 'text-gray-500');
+      btn.classList.add('border-emerald-500', 'text-emerald-600');
+      if (name === 'charts') renderCharts();
+      if (name === 'leaderboard') renderLeaderboard();
+    }
+
+    function toggleAccordion(id) {
+      const el = document.getElementById(id);
+      const idx = id.replace('acc-', '');
+      const icon = document.getElementById('acc-icon-' + idx);
+      el.classList.toggle('hidden');
+      icon.textContent = el.classList.contains('hidden') ? '▼' : '▲';
+    }
+
+    const gamesData = {{ games_json | safe }};
+    const lbData = {{ leaderboard_json | safe }};
+
+    const gameLabels = gamesData.map(g => g.date);
+    const distances = gamesData.map(g => parseFloat(g.distance_km) || null);
+    const avgHRs = gamesData.map(g => parseInt(g.avg_hr) || null);
+    const maxHRs = gamesData.map(g => parseInt(g.max_hr) || null);
+    const calories = gamesData.map(g => parseInt(g.calories) || null);
+    const brancosScores = gamesData.map(g => g.brancos_score || null);
+    const pretosScores = gamesData.map(g => g.pretos_score || null);
+
+    const baseOpts = {
+      responsive: true,
+      plugins: { legend: { display: false } },
+      scales: { x: { ticks: { maxRotation: 45, font: { size: 10 } } }, y: { beginAtZero: false } }
+    };
+
+    let chartsRendered = false;
+    function renderCharts() {
+      if (chartsRendered) return;
+      chartsRendered = true;
+
+      new Chart(document.getElementById('chartDistance'), {
+        type: 'line',
+        data: { labels: gameLabels, datasets: [{ data: distances, borderColor: '#10b981', backgroundColor: 'rgba(16,185,129,0.1)', fill: true, tension: 0.3, pointRadius: 4, spanGaps: true }] },
+        options: baseOpts,
+      });
+
+      new Chart(document.getElementById('chartHR'), {
+        type: 'line',
+        data: { labels: gameLabels, datasets: [
+          { label: 'Avg HR', data: avgHRs, borderColor: '#f59e0b', backgroundColor: 'rgba(245,158,11,0.1)', fill: true, tension: 0.3, pointRadius: 4, spanGaps: true },
+          { label: 'Max HR', data: maxHRs, borderColor: '#ef4444', borderDash: [4,4], fill: false, tension: 0.3, pointRadius: 3, spanGaps: true },
+        ]},
+        options: { ...baseOpts, plugins: { legend: { display: true, position: 'top' } } },
+      });
+
+      new Chart(document.getElementById('chartCalories'), {
+        type: 'bar',
+        data: { labels: gameLabels, datasets: [{ data: calories, backgroundColor: 'rgba(139,92,246,0.7)', borderRadius: 4 }] },
+        options: baseOpts,
+      });
+
+      new Chart(document.getElementById('chartScores'), {
+        type: 'bar',
+        data: { labels: gameLabels, datasets: [
+          { label: 'Brancos', data: brancosScores, backgroundColor: 'rgba(229,231,235,0.9)', borderRadius: 4 },
+          { label: 'Pretos',  data: pretosScores,  backgroundColor: 'rgba(31,41,55,0.8)',    borderRadius: 4 },
+        ]},
+        options: { ...baseOpts, plugins: { legend: { display: true, position: 'top' } }, scales: { ...baseOpts.scales, y: { beginAtZero: true } } },
+      });
+    }
+
+    let lbRendered = false;
+    function renderLeaderboard() {
+      if (lbRendered || !lbData.length) return;
+      lbRendered = true;
+
+      const colors = lbData.map(e =>
+        e.win_rate >= 60 ? 'rgba(16,185,129,0.8)' :
+        e.win_rate >= 40 ? 'rgba(245,158,11,0.8)' :
+                           'rgba(239,68,68,0.7)'
+      );
+
+      new Chart(document.getElementById('chartLeaderboard'), {
+        type: 'bar',
+        data: {
+          labels: lbData.map(e => e.player),
+          datasets: [{
+            label: 'Win %',
+            data: lbData.map(e => e.win_rate),
+            backgroundColor: colors,
+            borderRadius: 4,
+          }]
+        },
+        options: {
+          indexAxis: 'y',
+          responsive: true,
+          plugins: { legend: { display: false } },
+          scales: { x: { beginAtZero: true, max: 100, ticks: { callback: v => v + '%' } } }
+        }
+      });
+    }
+
+    // Render leaderboard on load (it's the default tab)
+    renderLeaderboard();
+  </script>
+</body>
+</html>

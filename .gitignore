@@ -15,5 +15,8 @@ uv.lock
 # Data — raw exports may contain personal data, keep out of git by default
 data/raw/
 
+# Secrets
+.env
+
 # OS
 .DS_Store
